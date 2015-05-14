@@ -16,3 +16,9 @@ hs_err_pid*
 /warehouse/warehouse/nbproject/private/
 /warehouse/warehouse/warehouse-ejb/nbproject/private/
 /warehouse/warehouse-ac/nbproject/private/
+/warehouse/warehouse-ac/build/
+/warehouse/warehouse/warehouse-ejb/build/
+/warehouse/warehouse/build/
+/warehouse/warehouse/warehouse-ejb/dist/
+/warehouse/warehouse-ac/dist/
+/warehouse/warehouse/dist/
