@@ -15,7 +15,7 @@ In Netbeans create a Java DB database:
 **password:** warehousePassword
 
 ```sql
-CREATE TABLE "ORDER" (
+CREATE TABLE "BookOrder" (
     "id" INTEGER NOT NULL PRIMARY KEY,
     "bookId" INTEGER NOT NULL,
     "bookName" VARCHAR(100),
