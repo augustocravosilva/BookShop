@@ -18,3 +18,6 @@ hs_err_pid*
 /store/Application/Application-war/build/
 /store/Application/build/
 /store/Application/Application-war/dist/
+/warehouse/warehouse/nbproject/private/
+/warehouse/warehouse/warehouse-ejb/nbproject/private/
+/warehouse/warehouse-ac/nbproject/private/
