@@ -13,3 +13,8 @@ hs_err_pid*
 /store/Application/nbproject/private/
 /store/Application/Application-war/nbproject/private/
 /store/Application/Application-ejb/nbproject/private/
+/store/Application/Application-ejb/build/
+/store/Application/Application-ejb/dist/
+/store/Application/Application-war/build/
+/store/Application/build/
+/store/Application/Application-war/dist/
