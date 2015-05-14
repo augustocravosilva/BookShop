@@ -1,16 +1,10 @@
 package warehouseejb;
 
-import java.util.Date;
-import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.transaction.UserTransaction;
-import sun.util.calendar.CalendarDate;
 
 
 @MessageDriven(mappedName = "jms/EAppQueue", activationConfig = {

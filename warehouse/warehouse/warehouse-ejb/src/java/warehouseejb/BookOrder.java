@@ -190,7 +190,7 @@ public class BookOrder {
         Statement stmt = conn.createStatement();
         String query = "SELECT * FROM BookOrder WHERE id = " + id;
         ResultSet rs = stmt.executeQuery(query);
-
+        
         BookOrder bookOrder = null;
         
         if (rs.next()) {
@@ -203,9 +203,9 @@ public class BookOrder {
             bookOrder.setOrderDate(rs.getString("orderDate"));
             bookOrder.setDispatchDate(rs.getString("dispatchDate"));
         }
-
+        
         close(conn);
-
+        
         return bookOrder;
     }
     
