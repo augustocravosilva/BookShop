@@ -1,5 +1,6 @@
 package warehouseejb;
 
+import java.util.Date;
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -9,6 +10,7 @@ import javax.jms.TextMessage;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
+import sun.util.calendar.CalendarDate;
 
 
 @MessageDriven(mappedName = "jms/EAppQueue", activationConfig = {
@@ -31,10 +33,13 @@ public class WarehouseBean implements MessageListener {
             try {
                 String m = ((TextMessage)message).getText();
                 System.out.println(m);
-                BookOrder order;
-                order = new BookOrder(1, 1, 10, "OPEN");
-                BookOrderJpaController controller = new BookOrderJpaController();
-                controller.create(order);
+                /*BookOrder order;
+                order = new BookOrder(1, "efgh", "slb", 22, "1993-09-23 03:23:34", null, "maior");
+                order.create();*/
+                
+                BookOrder order = BookOrder.findById(1);
+                order.setBookName("benfica");
+                order.save();
                 
                 System.out.println("book - > " + order);
                 

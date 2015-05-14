@@ -1,117 +1,108 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package warehouseejb;
 
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@Entity
-@Table(name = "ORDER")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "BookOrder.findAll", query = "SELECT b FROM BookOrder b"),
-    @NamedQuery(name = "BookOrder.findById", query = "SELECT b FROM BookOrder b WHERE b.id = :id"),
-    @NamedQuery(name = "BookOrder.findByBookId", query = "SELECT b FROM BookOrder b WHERE b.bookId = :bookId"),
-    @NamedQuery(name = "BookOrder.findByBookName", query = "SELECT b FROM BookOrder b WHERE b.bookName = :bookName"),
-    @NamedQuery(name = "BookOrder.findByQuantity", query = "SELECT b FROM BookOrder b WHERE b.quantity = :quantity"),
-    @NamedQuery(name = "BookOrder.findByStatus", query = "SELECT b FROM BookOrder b WHERE b.status = :status")})
-public class BookOrder implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id")
+
+
+public class BookOrder {
+    
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "bookId")
-    private int bookId;
-    @Size(max = 100)
-    @Column(name = "bookName")
+    private String isbn;
     private String bookName;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "quantity")
     private int quantity;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "status")
+    private String orderDate;
+    private String dispatchDate;
     private String status;
-
+    
     public BookOrder() {
     }
-
+    
     public BookOrder(Integer id) {
         this.id = id;
     }
-
-    public BookOrder(Integer id, int bookId, int quantity, String status) {
+    
+    public BookOrder(Integer id, String isbn, String bookName, int quantity, String orderDate, String dispatchDate, String status) {
         this.id = id;
-        this.bookId = bookId;
+        this.isbn = isbn;
+        this.bookName = bookName;
         this.quantity = quantity;
+        this.orderDate = orderDate;
+        this.dispatchDate = dispatchDate;
         this.status = status;
     }
-
+    
+    
     public Integer getId() {
         return id;
     }
-
+    
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public int getBookId() {
-        return bookId;
+    
+    public String getIsbn() {
+        return isbn;
     }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
+    
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
-
+    
     public String getBookName() {
         return bookName;
     }
-
+    
     public void setBookName(String bookName) {
         this.bookName = bookName;
     }
-
+    
     public int getQuantity() {
         return quantity;
     }
-
+    
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
+    
     public String getStatus() {
         return status;
     }
-
+    
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
+    public String getOrderDate() {
+        return orderDate;
+    }
+    
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+    
+    public String getDispatchDate() {
+        return dispatchDate;
+    }
+    
+    public void setDispatchDate(String dispatchDate) {
+        this.dispatchDate = dispatchDate;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -124,10 +115,98 @@ public class BookOrder implements Serializable {
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return "warehouseejb.BookOrder[ id=" + id + " ]";
+    }
+    
+    public void save() throws SQLException {
+        Connection conn = connect();
+        Statement stmt = conn.createStatement();
+        String query = String.format("UPDATE BookOrder SET isbn = \'%s\', bookName = \'%s\', "
+                + "quantity = %d, orderDate = \'%s\', dispatchDate = \'%s\', status = \'%s\' WHERE id = %d", isbn, bookName, quantity, orderDate, dispatchDate, status, id);
+        
+        stmt.executeUpdate(query);
+        close(conn);
+    }
+    
+    public void create() throws SQLException {
+        Connection conn = connect();
+        Statement stmt = conn.createStatement();
+        String query = String.format("INSERT INTO BookOrder(isbn, bookName, quantity, orderDate, dispatchDate, status) VALUES (\'%s\', \'%s\', %d, \'%s\', \'%s\', \'%s\')", isbn, bookName, quantity, orderDate, dispatchDate, status);
+        System.out.println(query);
+        stmt.execute(query);
+        close(conn);
+    }
+    
+    static private Connection connect() {
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            String url = "jdbc:derby://localhost:1527/WarehouseDB";
+            Connection conn = DriverManager.getConnection(url, "warehouseUser", "warehousePassword");
+            return conn;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(BookOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    static private void close(Connection conn) {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    static List<BookOrder> findAll() throws SQLException {
+        List<BookOrder> booksList = new LinkedList<>();
+        Connection conn = connect();
+        Statement stmt = conn.createStatement();
+        String query = "SELECT * FROM BookOrder ORDER BY orderDate DESC";
+        ResultSet rs = stmt.executeQuery(query);
+        
+        while(rs.next()) {
+            BookOrder bookOrder = new BookOrder();
+            bookOrder.setId(rs.getInt("id"));
+            bookOrder.setBookName(rs.getString("bookName"));
+            bookOrder.setIsbn(rs.getString("isbn"));
+            bookOrder.setQuantity(rs.getInt("quantity"));
+            bookOrder.setStatus(rs.getString("status"));
+            bookOrder.setOrderDate(rs.getString("orderDate"));
+            bookOrder.setDispatchDate(rs.getString("dispatchDate"));
+        }
+        
+        close(conn);
+        
+        return booksList;
+    }
+    
+    
+    static BookOrder findById(int id) throws SQLException {
+        List<BookOrder> booksList = new LinkedList<>();
+        Connection conn = connect();
+        Statement stmt = conn.createStatement();
+        String query = "SELECT * FROM BookOrder WHERE id = " + id;
+        ResultSet rs = stmt.executeQuery(query);
+
+        BookOrder bookOrder = null;
+        
+        if (rs.next()) {
+            bookOrder = new BookOrder();
+            bookOrder.setId(rs.getInt("id"));
+            bookOrder.setBookName(rs.getString("bookName"));
+            bookOrder.setIsbn(rs.getString("isbn"));
+            bookOrder.setQuantity(rs.getInt("quantity"));
+            bookOrder.setStatus(rs.getString("status"));
+            bookOrder.setOrderDate(rs.getString("orderDate"));
+            bookOrder.setDispatchDate(rs.getString("dispatchDate"));
+        }
+
+        close(conn);
+
+        return bookOrder;
     }
     
 }
