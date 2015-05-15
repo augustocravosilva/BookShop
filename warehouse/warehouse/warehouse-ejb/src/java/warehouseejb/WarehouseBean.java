@@ -27,13 +27,13 @@ public class WarehouseBean implements MessageListener {
             try {
                 String m = ((TextMessage)message).getText();
                 System.out.println(m);
-                /*BookOrder order;
-                order = new BookOrder(1, "efgh", "slb", 22, "1993-09-23 03:23:34", null, "maior");
-                order.create();*/
+                BookOrder order;
+                order = new BookOrder(1, "abcd", "o maior", 22, "2000-03-23 03:23:34", null, "nabo");
+                order.create();
                 
-                BookOrder order = BookOrder.findById(1);
-                order.setBookName("benfica");
-                order.save();
+                /*BookOrder order = (BookOrder) BookOrder.findById(1);
+                order.setBookName("benficaCampeao");
+                order.save();*/
                 
                 System.out.println("book - > " + order);
                 

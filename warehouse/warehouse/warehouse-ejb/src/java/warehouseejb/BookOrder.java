@@ -176,6 +176,7 @@ public class BookOrder {
             bookOrder.setStatus(rs.getString("status"));
             bookOrder.setOrderDate(rs.getString("orderDate"));
             bookOrder.setDispatchDate(rs.getString("dispatchDate"));
+            booksList.add(bookOrder);
         }
         
         close(conn);

@@ -5,17 +5,27 @@
  */
 package warehouseac;
 
+import java.awt.Component;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.xml.ws.WebServiceRef;
+import warehouseejb.BookOrder;
+import warehouseejb.WarehouseService_Service;
+
 /**
  *
  * @author tiago
  */
 public class WarehouseGUI extends javax.swing.JFrame {
+    @WebServiceRef(wsdlLocation = "META-INF/wsdl/localhost_8080/WarehouseService/WarehouseService.wsdl")
+    private static WarehouseService_Service service;
 
     /**
      * Creates new form WarehouseGUI
      */
     public WarehouseGUI() {
         initComponents();
+        initTable();
     }
 
     /**
@@ -34,10 +44,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "isbn", "book", "quantity", "orderDate", "dispatchDate", "status"
@@ -47,7 +54,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -61,7 +68,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setColumnSelectionAllowed(true);
         jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,15 +76,14 @@ public class WarehouseGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 45, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -122,4 +128,20 @@ public class WarehouseGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    private void initTable() {
+        List<BookOrder> orders = getAllOrders();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        for(BookOrder o: orders) {
+            System.out.print(".");
+            model.addRow(new Object[]{o.getIsbn(), o.getBookName(), o.getQuantity(), o.getOrderDate(), o.getDispatchDate(), o.getStatus()});
+        }
+        
+    }
+
+    private static java.util.List<warehouseejb.BookOrder> getAllOrders() {
+        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
+        return port.getAllOrders();
+    }
+
 }
