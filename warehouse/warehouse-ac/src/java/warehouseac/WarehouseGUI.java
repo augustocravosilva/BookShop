@@ -1,12 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package warehouseac;
 
-import java.awt.Component;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.ws.WebServiceRef;
 import warehouseejb.BookOrder;
@@ -19,7 +22,12 @@ import warehouseejb.WarehouseService_Service;
 public class WarehouseGUI extends javax.swing.JFrame {
     @WebServiceRef(wsdlLocation = "META-INF/wsdl/localhost_8080/WarehouseService/WarehouseService.wsdl")
     private static WarehouseService_Service service;
-
+    
+    
+    private HashMap<Integer, Integer> rowToId;
+    private static final String CLOSED = "closed";
+    private static final String OPEN = "open";
+    
     /**
      * Creates new form WarehouseGUI
      */
@@ -27,7 +35,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
         initComponents();
         initTable();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,6 +47,8 @@ public class WarehouseGUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        btnRefresh = new javax.swing.JButton();
+        btnComplete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,9 +76,21 @@ public class WarehouseGUI extends javax.swing.JFrame {
             }
         });
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.setColumnSelectionAllowed(true);
         jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        btnComplete.setText("Complete");
+        btnComplete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,17 +100,59 @@ public class WarehouseGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(btnRefresh)
+                .addGap(18, 18, 18)
+                .addComponent(btnComplete)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 45, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnComplete))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        initTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+    
+    private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
+        int selected[] = jTable1.getSelectedRows();
+        
+        if (selected.length == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "You must select a row!",
+                    "Empty selection",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+        else {
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date date = new Date();
+            String dateString = dt.format(date);
+            
+            for(int i: selected) {
+                BookOrder o = getOrder(rowToId.get(i));
+                System.out.println(i + ": " + o.getBookName());
+                
+                o.setStatus(CLOSED);
+                o.setDispatchDate(dateString);
+                
+                saveOrder(o);
+                initTable();
+            }
+        }
+    }//GEN-LAST:event_btnCompleteActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -96,8 +160,8 @@ public class WarehouseGUI extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -115,7 +179,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(WarehouseGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -123,25 +187,54 @@ public class WarehouseGUI extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComplete;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
+    
     private void initTable() {
-        List<BookOrder> orders = getAllOrders();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        int rowCount = model.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+        
+        rowToId = new HashMap<Integer,Integer>();
+        List<BookOrder> orders = getAllOrders();
+        
+        int i = 0;
         for(BookOrder o: orders) {
             System.out.print(".");
             model.addRow(new Object[]{o.getIsbn(), o.getBookName(), o.getQuantity(), o.getOrderDate(), o.getDispatchDate(), o.getStatus()});
+            rowToId.put(i, o.getId());
+            i++;
         }
         
     }
-
+    
     private static java.util.List<warehouseejb.BookOrder> getAllOrders() {
         warehouseejb.WarehouseService port = service.getWarehouseServicePort();
         return port.getAllOrders();
     }
-
+    
+    private static BookOrder getOrder(int id) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
+        return port.getOrder(id);
+    }
+    
+    private static void saveOrder(warehouseejb.BookOrder order) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
+        port.saveOrder(order);
+    }
+    
+    
+    
 }

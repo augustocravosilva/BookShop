@@ -28,7 +28,7 @@ public class WarehouseBean implements MessageListener {
                 String m = ((TextMessage)message).getText();
                 System.out.println(m);
                 BookOrder order;
-                order = new BookOrder(1, "abcd", "o maior", 22, "2000-03-23 03:23:34", null, "nabo");
+                order = new BookOrder(1, "qwerty", "pimpampum", 22, "2014-03-23 00:00:00", null, "dsfs");
                 order.create();
                 
                 /*BookOrder order = (BookOrder) BookOrder.findById(1);

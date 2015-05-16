@@ -39,7 +39,11 @@ public class WarehouseService {
 
     @WebMethod(operationName = "getOrder")
     public BookOrder getOrder(@WebParam(name = "id") int id) {
-        //TODO write your implementation code here:
+        try {
+            return BookOrder.findById(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(WarehouseService.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
     

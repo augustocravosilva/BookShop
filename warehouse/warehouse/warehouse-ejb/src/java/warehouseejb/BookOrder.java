@@ -134,7 +134,7 @@ public class BookOrder {
     public void create() throws SQLException {
         Connection conn = connect();
         Statement stmt = conn.createStatement();
-        String query = String.format("INSERT INTO BookOrder(isbn, bookName, quantity, orderDate, dispatchDate, status) VALUES (\'%s\', \'%s\', %d, \'%s\', \'%s\', \'%s\')", isbn, bookName, quantity, orderDate, dispatchDate, status);
+        String query = String.format("INSERT INTO BookOrder(isbn, bookName, quantity, orderDate, dispatchDate, status) VALUES (\'%s\', \'%s\', %d, \'%s\', \'%s\', \'%s\')", isbn, bookName, quantity, orderDate, null, "open");
         System.out.println(query);
         stmt.execute(query);
         close(conn);
