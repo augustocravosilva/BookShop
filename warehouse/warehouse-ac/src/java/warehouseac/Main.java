@@ -10,10 +10,8 @@ import javax.xml.ws.WebServiceRef;
 import warehouseejb.BookOrder;
 import warehouseejb.WarehouseService_Service;
 
-/**
- *
- * @author tiago
- */
+
+//TODO: Delete this - only for testing purpose
 public class Main {
     @WebServiceRef(wsdlLocation = "META-INF/wsdl/localhost_8080/WarehouseService/WarehouseService.wsdl")
     private static WarehouseService_Service service;
@@ -53,14 +51,14 @@ public class Main {
         warehouseejb.WarehouseService port = service.getWarehouseServicePort();
         return port.hello(name);
     }
-
+    
     private static void saveOrder(warehouseejb.BookOrder order) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
         warehouseejb.WarehouseService port = service.getWarehouseServicePort();
         port.saveOrder(order);
     }
-
+    
     private static BookOrder getOrder(int id) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.

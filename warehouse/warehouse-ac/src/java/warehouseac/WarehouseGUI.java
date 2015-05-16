@@ -197,13 +197,13 @@ public class WarehouseGUI extends javax.swing.JFrame {
     
     private void initTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-
+        
         int rowCount = model.getRowCount();
         for (int i = rowCount - 1; i >= 0; i--) {
             model.removeRow(i);
         }
         
-        rowToId = new HashMap<Integer,Integer>();
+        rowToId = new HashMap<>();
         List<BookOrder> orders = getAllOrders();
         
         int i = 0;

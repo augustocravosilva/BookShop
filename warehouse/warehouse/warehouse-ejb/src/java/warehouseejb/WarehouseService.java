@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package warehouseejb;
 
 import java.sql.SQLException;
@@ -21,7 +21,7 @@ import javax.ejb.Stateless;
 @WebService(serviceName = "WarehouseService")
 @Stateless()
 public class WarehouseService {
-
+    
     @WebMethod(operationName = "hello")
     public String hello(@WebParam(name = "name") String txt) {
         return "Hello " + txt + " !";
@@ -36,7 +36,7 @@ public class WarehouseService {
         }
         return null;
     }
-
+    
     @WebMethod(operationName = "getOrder")
     public BookOrder getOrder(@WebParam(name = "id") int id) {
         try {
@@ -58,5 +58,5 @@ public class WarehouseService {
     }
     
     
-
+    
 }
