@@ -1,18 +1,19 @@
-# BookShop
 Lab Project for Distribution and Integration Technologies - FEUP
 
 
-Setup
-=====
+#Setup
 
+For this project to run you must do the following configurations. 
+
+  
 Warehouse database
 ------------------
 
 **In Netbeans create a Java DB database:**
 
-*name:* WarehouseDB
-*username:* warehouseUser
-*password:* warehousePassword
+*name:* WarehouseDB  
+*username:* warehouseUser  
+*password:* warehousePassword  
 
 ```sql
 CREATE TABLE BOOKORDER (
@@ -30,19 +31,19 @@ CREATE TABLE BOOKORDER (
 
 Then go to the [glassfish page](http://localhost:4848) and then in JDBC inside Resources add a new JDBC Resource with:
 
-*name:* WarehouseDB
-*pool name:* DerbyPool
+*name:* WarehouseDB  
+*pool name:* DerbyPool  
 
 Message Queue
 ------------------
 
 Go to the [glassfish page](http://localhost:4848) and then in JMS Resources  inside Resources do the following:
 
- - **Create a destination resource:**
-   *JNDI Name:* jms/EAppQueue
-   *Physical Destination Name:* name
-   *Resource Type:* javax.jsm.Queue
- - **Create a connection factory:**
-   *JNDI Name:* jms/EAppQueueFactory
-   *Resource Type:* javax.jms.QueueConnectionFactory
+ - **Create a destination resource:**  
+   *JNDI Name:* jms/EAppQueue  
+   *Physical Destination Name:* name  
+   *Resource Type:* javax.jsm.Queue  
+ - **Create a connection factory:**  
+   *JNDI Name:* jms/EAppQueueFactory  
+   *Resource Type:* javax.jms.QueueConnectionFactory  
 
