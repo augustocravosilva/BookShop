@@ -47,3 +47,9 @@ Go to the [glassfish page](http://localhost:4848) and then in JMS Resources  ins
    *JNDI Name:* jms/EAppQueueFactory  
    *Resource Type:* javax.jms.QueueConnectionFactory  
 
+or run the following commands
+
+```sh
+asadmin create-jms-resource --restype=javax.jms.Queue jms/EAppQueue
+asadmin create-jms-resource --restype=javax.jms.QueueConnectionFactory jms/EAppQueueFactory
+```
