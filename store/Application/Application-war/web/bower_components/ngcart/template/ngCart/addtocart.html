@@ -1,0 +1,16 @@
+
+<div ng-hide="attrs.id">
+    <a class="btn btn-lg btn-primary" ng-disabled="true" ng-transclude></a>
+
+</div>
+<div ng-show="attrs.id">
+    <div ng-hide="inCart()">
+        <a class="button btn-block large"
+           ng-click="ngCart.addItem(id, name, price, quantity, data)"
+           ng-transclude></a>
+    </div>
+    <div class="text-center" ng-show="inCart()">
+        <a class="button btn-block large" href="#/checkout">This item is in your cart</a>
+    </div>
+
+</div>

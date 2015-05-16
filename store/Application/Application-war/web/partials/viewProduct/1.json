@@ -1,0 +1,12 @@
+{
+    "product":{
+        "id":"A002",
+        "name":"Michael Kors 13\" Sleeve",
+        "category":"SLEEVE",
+        "brand":"MICHAEL",
+        "price":99.95,
+        "material":"Leather",
+        "description":"The MICHAEL Michael Kors Sleeve is the perfect designer case to protect and carry your MacBook Pro or MacBook Pro with Retina Display thanks to its Saffiano PVC construction and its interior padding. A rigid protective layer also reinforces additional backbone support to maximize durability. The Michael Kors signature letter hardware along the front provides a luxurious touch as well. And of course it's all individually crafted with the superior quality and strong attention to detail you expect from Michael Kors.",
+        "subproducts":[{"color":"BLACK","size":"13","stock":4,"id":"A002.BLACK.13","stock_shops":["Porto: 0","Lisboa: 0"]}],
+        "image_links":["{69D754D6-76F9-11E4-8591-080027980C81}","{78401B71-76F9-11E4-8591-080027980C81}"],
+        "specs_link":null}}

@@ -1,0 +1,163 @@
+<section class="marketplace-top" style="background-color: #ffffff">
+    <div class="row" id="market-wrapper" style="background-color: #ffffff">
+        <div class="item_image col-lg-8 col-lg-offset-2">
+            <img data-effect="fade" class="aligncenter" ng-src="http://127.0.0.1:49822/api/images/{{selected_image}}" alt="">
+        </div><!-- end item_image -->
+    </div>
+</section>
+
+<section class="section1" style="padding-top: 0; margin-top: 0;">
+    <div class="container clearfix" style="padding-top: 0; margin-top: 0;">
+        <div class="content col-lg-12 col-md-12 col-sm-12 clearfix" style="padding-bottom: 0px;padding-top: 0; margin-top: 0;">
+            <div class="general-title text-center" style="padding-top: 0; margin-top: 0;">
+                <h3 style="padding-top: 0; margin-top: 0;">{{product.name}}</h3>
+                <p>by {{product.brand}}</p>
+                <hr>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="item_details">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="theme_details">
+                        <div class="details_section">
+                            <h3>Item Details</h3>
+                                     <span style="color: #2B2E31; font-size: 16px;">
+                                         Material: <br><span style="color: #696E74; font-size: 14px;">{{product.material}}</span>
+                                     </span><br>
+                                     <span style="color: #2B2E31; font-size: 16px;" ng-repeat="(key, array) in select_options">{{key}}: <br>
+                                        <select style="font-size: 12px;" ng-model="current[key]" ng-change="updateSelected(key)">
+                                            <option ng-repeat="val in array">{{val}}</option>
+                                        </select>
+                                    <br></span>
+                        </div>
+                    </div>
+                </div><!-- col-lg-3 -->
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="theme_details">
+                        <div class="item-description">
+                            <p>{{product.description}}<a href="http://127.0.0.1:49822/api/images/{{product.specs_link}}" ng-if="product.specs_link != null"> Know more.</a></p>
+                        </div><!-- item-description -->
+                    </div><!-- theme_details -->
+                </div><!-- col-lg-6 -->
+
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="theme_details">
+                        <div class="item_price">
+                            <h3><span><small>€</small>{{product.price}}</span></h3>
+                        </div><!-- item_price -->
+                        <hr>
+                        <div class="buttons">
+                            <a class="button btn-block large" data-toggle="popover" data-html="true" data-placement="top" title="Stock in shops"
+                               data-content="{{stockString}}">{{current["stock"]}} in Stock</a>
+                            <!--<a class="button btn-block large" ng-if="current['stock'] > 0" href="#"><i class="fa fa-download"></i> BUY NOW</a>-->
+                            <ngcart-addtocart ng-if="current['stock']" id="{{ current.id }}" name="{{ product.name }}" price="{{ product.price }}" data="current"><i class="fa fa-shopping-cart"></i> Add to cart</ngcart-addtocart>
+                        </div><!-- buttons -->
+                    </div><!-- theme_details -->
+                </div><!-- col-lg-3 -->
+
+
+            </div><!-- item_details -->
+
+            <div class="clearfix"></div>
+        </div><!-- end content -->
+        <div class="content col-lg-12 col-md-12 col-sm-12 clearfix">
+            <div class="general-title text-center">
+                <h3>Images</h3>
+                <hr>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="col-lg-12" >
+                <div class="col-md-4 he-wrap tpl6 market-item" ng-if="product.image_links.length == 3" ng-repeat="image in product.image_links">
+                    <img class="lazyOwl"  width="400" height="400"ng-click='updateImage($index)' ng-src="http://127.0.0.1:49822/api/images/{{image}}" alt="">
+                </div><!-- he wrap -->
+                <div class="col-md-6 he-wrap tpl6 market-item" ng-if="product.image_links.length == 2" ng-repeat="image in product.image_links">
+                    <img class="lazyOwl" style="width: 400px; height: 400px;" width="400" height="400" ng-click='updateImage($index)' ng-src="http://127.0.0.1:49822/api/images/{{image}}" alt="">
+                </div><!-- he wrap -->
+                <div class="col-md-12 he-wrap tpl6 market-item" ng-if="product.image_links.length == 1" ng-repeat="image in product.image_links">
+                    <img class="lazyOwl" ng-click='updateImage($index)' ng-src="http://127.0.0.1:49822/api/images/{{image}}" alt="">
+                </div><!-- he wrap -->
+                <div class="col-md-3 he-wrap tpl6 market-item" ng-if="product.image_links.length == 4" ng-repeat="image in product.image_links">
+                    <img class="lazyOwl" ng-click='updateImage($index)' ng-src="http://127.0.0.1:49822/api/images/{{image}}" alt="">
+                </div><!-- he wrap -->
+                </div>
+        </div><!-- end content -->
+        <div class="portfolio-centered" style="margin-left: 80px; margin-top: 0; padding-top: 0;">
+            <div class="general-title text-center">
+            <h3>Related Products</h3>
+            <hr>
+            </div>
+
+            <div class="divider"></div>
+            <div class="recentitems portfolio container col-lg-12 col-md-12 col-sm-12 clearfix">
+
+                <div ng-if="related.length == 4" class="portfolio-item col-md-3" style="margin-top: 20px" ng-repeat="related_p in related">
+                    <div class="he-wrap tpl6">
+                        <img ng-src="http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" alt="">
+                        <div class="he-view">
+                            <div class="bg a0" data-animate="fadeIn">
+                                <h3 class="a1" data-animate="fadeInDown">{{related_p.name}}</h3>
+                                <a data-rel="prettyPhoto" href=http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
+                                <a ng-href="#products/{{related_p.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
+                            </div><!-- he bg -->
+                        </div><!-- he view -->
+                    </div><!-- he wrap -->
+                </div>
+
+                <div ng-if="related.length == 3" class="portfolio-item col-md-3 col-md-offset-1" style="margin-top: 20px" ng-repeat="related_p in related">
+                    <div class="he-wrap tpl6">
+                        <img ng-src="http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" alt="">
+                        <div class="he-view">
+                            <div class="bg a0" data-animate="fadeIn">
+                                <h3 class="a1" data-animate="fadeInDown">{{related_p.name}}</h3>
+                                <a data-rel="prettyPhoto" href=http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
+                                <a ng-href="#products/{{related_p.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
+                            </div><!-- he bg -->
+                        </div><!-- he view -->
+                    </div><!-- he wrap -->
+                </div>
+
+                <div ng-if="related.length == 2" class="portfolio-item col-md-3 col-md-offset-2" style="margin-top: 20px" ng-repeat="related_p in related">
+                    <div class="he-wrap tpl6">
+                        <img ng-src="http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" alt="">
+                        <div class="he-view">
+                            <div class="bg a0" data-animate="fadeIn">
+                                <h3 class="a1" data-animate="fadeInDown">{{related_p.name}}</h3>
+                                <a data-rel="prettyPhoto" href=http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
+                                <a ng-href="#products/{{related_p.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
+                            </div><!-- he bg -->
+                        </div><!-- he view -->
+                    </div><!-- he wrap -->
+                </div>
+
+                <div ng-if="related.length == 1" class="portfolio-item col-md-4 col-md-offset-4" style="margin-top: 20px" ng-repeat="related_p in related">
+                    <div class="he-wrap tpl6">
+                        <img ng-src="http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" alt="">
+                        <div class="he-view">
+                            <div class="bg a0" data-animate="fadeIn">
+                                <h3 class="a1" data-animate="fadeInDown">{{related_p.name}}</h3>
+                                <a data-rel="prettyPhoto" href=http://127.0.0.1:49822/api/images/{{related_p.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
+                                <a ng-href="#products/{{related_p.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
+                            </div><!-- he bg -->
+                        </div><!-- he view -->
+                    </div><!-- he wrap -->
+                </div>
+
+
+            </div><!-- portfolio -->
+
+        </div><!-- portfolio container -->
+    </div><!-- end container -->
+
+</section><!-- end section -->
+
+<script type="application/javascript">
+    $('#jetmenu li').removeClass('active');
+    $('#jetmenu .products').addClass('active');
+    $('[data-toggle="popover"]').popover();
+</script>
+
+
