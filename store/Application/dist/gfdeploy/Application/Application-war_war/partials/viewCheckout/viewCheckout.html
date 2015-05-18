@@ -1,0 +1,138 @@
+<section class="section1">
+    <div class="container clearfix">
+        <div class="content col-lg-8 col-md-8 col-sm-8 col-xs-12 clearfix" ng-controller="viewCheckout as checkout">
+            <div class="text-center" ng-show="checkout.checkingOut">
+                <i class="fa fa-shopping-cart fa-4x"></i><h1>Your order is being processed!</h1>
+            </div>
+            <div ng-hide="checkout.checkingOut">
+                <ngcart-cart></ngcart-cart>
+
+
+                <!--
+                            <h5 class="title">PERSONAL INFORMATION</h5>
+
+                            <form id="personalinfo" action="" name="personalinfo" method="post">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="text" name="name" id="email" class="form-control" placeholder="example@yoursite.com">
+                                <label for="fname">First Name <span class="required">*</span></label>
+                                <input type="text" name="fname" id="fname" class="form-control" placeholder="John">
+                                <label for="lname">Last Name </label>
+                                <input type="text" name="lname" id="lname" class="form-control" placeholder="DOE">
+                            </form>
+
+                            <div class="clearfix"></div>
+                            <div class="divider"></div>
+                            -->
+                <br>
+                <div  ng-hide="checkout.ngCart.totalItems() === 0">
+
+                    <form  name="checkoutForm" ng-show="checkout.hasUser" id="cartinfo"
+                           ng-submit="checkoutForm.$valid && checkout.submitOrder(ngCart)">
+
+
+                        <h5 class="title">CART DETAILS</h5>
+                        <p><img alt="" src="assets/Theme/images/payments1.png"></p>
+                        <label for="cardnumber">Card Number <span class="required">*</span></label>
+                        <input type="number" name="cardnumber" id="cardnumber" class="form-control" placeholder="Your card number" required>
+                        <label for="cvc">CVC <span class="required">*</span></label>
+                        <input type="number" min="000" max="999" name="cvc" id="cvc" class="form-control" placeholder="Security code" required>
+                        <label for="ncard">Name on the Card <span class="required">*</span></label>
+                        <input type="text" name="ncard" id="ncard" class="form-control" placeholder="Name on the card" required>
+                        <label for="ncard">Expiration (MM/YY) <span class="required">*</span></label>
+
+                        <div class="clearfix"></div>
+
+                        <select class="form-control" style="width:75px; float:left; margin-right:10px;" required>
+                            <option>01</option>
+                            <option>02</option>
+                            <option>03</option>
+                            <option>04</option>
+                            <option>05</option>
+                            <option>06</option>
+                            <option>07</option>
+                            <option>08</option>
+                            <option>09</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <select class="form-control" style="width:75px;float:left" required>
+                            <option>14</option>
+                            <option>15</option>
+                            <option>16</option>
+                            <option>17</option>
+                            <option>18</option>
+                            <option>19</option>
+                        </select>
+
+                        <!--<div class="clearfix"></div>-->
+                        <div class="divider"></div>
+                        <a href="" class="dmbutton2" ng-hide="checkout.isNewAddress()" ng-click='checkout.setNewAddress(true)'>Send to another address</a>
+                        <a href="" class="dmbutton2" ng-show="checkout.isNewAddress()" ng-click='checkout.setNewAddress(false)'>Send to saved address</a>
+                        <div class="address" ng-show="checkout.isNewAddress()">
+                            <h5 class="title">DELIVERY INFORMATION</h5>
+
+                            <label for="baddress">Delivery Address</label>
+                            <input type="text" name="baddress" id="baddress" class="form-control" placeholder="Address line 1" ng-model="checkout.address.delivery_address" ng-required="checkout.isNewAddress()">
+                            <label for="bcity">Delivery City</label>
+                            <input type="text" name="bcity" id="bcity" class="form-control" placeholder="Your city" ng-model="checkout.address.delivery_city" ng-required="checkout.isNewAddress()">
+                            <label for="bzip">Zip 1 </label>
+                            <input type="number" name="bzip" id="bzip" class="form-control" placeholder="Your ZIP1 or postal code" ng-model="checkout.address.delivery_zip1" ng-required="checkout.isNewAddress()">
+                            <label for="bzip">Zip 2 </label>
+                            <input type="number" name="bzip" id="bzip1" class="form-control" placeholder="Your ZIP2 or postal code" ng-model="checkout.address.delivery_zip2" ng-required="checkout.isNewAddress()">
+
+                            <br>
+
+                        </div>
+                        <div class="clearfix"></div><br>
+                        <div class="clearfix"></div>
+                        <a href="" class="button">SHOW TERMS</a>
+                        <div class="clearfix"></div>
+
+                        <label class="checkbox-inline">
+                            <input id="inlineCheckbox3" type="checkbox" value="option1" required="You must agree with the terms!">
+                            <strong>AGREE TO TERMS</strong>
+                        </label>
+
+                        <br><br>
+                        <!--<div class="well"><strong>PURCHASE TOTAL:</strong> $18.00</div>-->
+                        <br>
+                        <!--<button  ng-click="checkout.submitOrder(ngCart)">PURCHASE</button>-->
+                        <input class="button large btn-block" type="submit" value="PURCHASE" />
+                    </form>
+                </div>
+
+            </div>
+
+
+
+
+        </div><!-- end content -->
+
+        <div id="sidebar" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            <div class="widget">
+                <h4 class="title">
+                    <span>Subscribe</span>
+                </h4>
+                <form id="subscribe" action="mc.php" name="subscribe" method="post">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Email">
+                    <div class="pull-right">
+                        <input type="submit" value="Subscribe" id="submit" class="button">
+                    </div>
+                </form>
+            </div>
+
+
+
+
+        </div><!-- end sidebar -->
+    </div><!-- end container -->
+</section><!-- end section -->
+
+<script type="application/javascript">
+    $('#jetmenu li').removeClass('active');
+    $('#jetmenu .checkout').addClass('active');
+    $('#jetmenu .checkout a').css("border-top", "rgb(177, 157, 111)");
+</script>

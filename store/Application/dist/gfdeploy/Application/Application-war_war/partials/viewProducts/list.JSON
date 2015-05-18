@@ -1,0 +1,138 @@
+{
+    "products": [
+        {
+            "id": "A0100",
+            "name": "tucano backpack",
+            "price": "39.99",
+            "material": "backpack",
+            "subcategory": "",
+            "brand": "tucano",
+            "material": "leather",
+            "description": "this amazing backpack will help you carry your laptop",
+            "colors": [
+                "blue",
+                "red"
+            ],
+            "screen-sizes": [
+                "15.4",
+                "13.3"
+            ],
+            "subproducts": [
+                {
+                    "color": "blue",
+                    "screen-size": "15.4",
+                    "stock": "10"
+                },
+                {
+                    "color": "red",
+                    "screen-size": "15.4",
+                    "stock": "5"
+                }
+            ],
+            "image-links": [],
+            "specs-link": "null"
+        },
+        {
+            "id": "A0101",
+            "name": "belkin sleeve",
+            "price": "19.99",
+            "material": "sleeve",
+            "subcategory": "",
+            "brand": "belkin",
+            "material": "leather",
+            "description": "this amazing sleeve will help you keep your laptop safe",
+            "colors": [
+                "blue",
+                "red"
+            ],
+            "screen-sizes": [
+                "15.4",
+                "13.3"
+            ],
+            "subproducts": [
+                {
+                    "color": "dark gray",
+                    "screen-size": "10.1",
+                    "stock": "2"
+                },
+                {
+                    "color": "white",
+                    "screen-size": "13.3",
+                    "stock": "10"
+                }
+            ],
+            "image-links": [],
+            "specs-link": "null"
+        },
+        {
+            "id": "A0100",
+            "name": "glorioso",
+            "price": "39.99",
+            "material": "backpack",
+            "subcategory": "",
+            "brand": "tucano",
+            "material": "leather",
+            "description": "this amazing backpack will help you carry your laptop",
+            "colors": [
+                "pink",
+                "red"
+            ],
+            "screen-sizes": [
+                "15.4",
+                "13.3"
+            ],
+            "subproducts": [
+                {
+                    "color": "blue",
+                    "screen-size": "15.4",
+                    "stock": "10"
+                },
+                {
+                    "color": "red",
+                    "screen-size": "15.4",
+                    "stock": "5"
+                }
+            ],
+            "image-links": [],
+            "specs-link": "null"
+        },
+        {
+            "id": "A0100",
+            "name": "eastpack",
+            "price": "39.99",
+            "material": "backpack",
+            "subcategory": "",
+            "brand": "tucano",
+            "material": "canvas",
+            "description": "this amazing backpack will help you carry your laptop",
+            "colors": [
+                "black",
+                "white"
+            ],
+            "screen-sizes": [
+                "15.4",
+                "13.3"
+            ],
+            "subproducts": [
+                {
+                    "color": "blue",
+                    "screen-size": "15.4",
+                    "stock": "10"
+                },
+                {
+                    "color": "red",
+                    "screen-size": "15.4",
+                    "stock": "5"
+                }
+            ],
+            "image-links": [],
+            "specs-link": "null"
+        }
+    ],
+    "page": "1",
+    "total-pages": "20",
+    "status": {
+        "code": "200",
+        "messsage": ""
+    }
+}
