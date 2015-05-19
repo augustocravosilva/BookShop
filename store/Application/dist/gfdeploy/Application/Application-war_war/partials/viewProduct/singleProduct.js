@@ -11,13 +11,29 @@ angular.module('myApp.viewProduct', ['ngRoute'])
             controller: 'viewProductCtrl'
         });
         }])
-        .controller('viewProductCtrl', ['$http', '$scope', '$routeParams', 'ngCart' ,function($http, $scope, $routeParams, ngCart) {
-            
+        .controller('viewProductCtrl', ['$http', '$scope', 'ngCart' ,function($http, $scope, $ngCart) {
+            var view = this;
             $http.get('partials/viewProduct/1.json').success(function(data) {
                 //$http.get('http://127.0.0.1:49822/api/products/' + $routeParams['productID']).success(function(data) {
-                console.log(JSON.stringify(data));
-                $scope.product = data.product;
-                $scope.selected_image = data.product.image_links[0];
+                console.log("SLB");
+                var google = data.google.items[0];
+                $scope.image = google.volumeInfo.imageLinks.thumbnail;
+                view.isbn = google.volumeInfo.industryIdentifiers[0].identifier;    
+                view.stock = data.bookshop.stock;
+                view.title = google.volumeInfo.title;
+                view.description = google.volumeInfo.description;
+                view.price = google.saleInfo.retailPrice.amount;
+                view.authors = "";
+                
+                for (var i = 0; i < google.volumeInfo.authors.length; i++) {
+                    if(i > 0)
+                        view.authors += ", ";
+                    
+                    view.authors += google.volumeInfo.authors[i];
+                    console.log("author: " + google.volumeInfo.authors[i]);
+                }
+                
+               
                 /*$scope.product = data.product;
                 $scope.current = {};
                 $scope.current.mainId = $scope.product.id;*/
@@ -25,28 +41,9 @@ angular.module('myApp.viewProduct', ['ngRoute'])
 
 
                 /****set iva and shipping ***/
-                ngCart.setTax(23);
-                ngCart.setShipping(0);
+                $ngCart.setTax(23);
+                $ngCart.setShipping(0);
                 
-                var url = "http://isbndb.com/api/v2/json/EQOFI0MP/book/" + data.product.isbn;
-                
-                /*$http.get(url).success(function (data) {
-                    console.log(JSON.stringify(data));
-                    console.log("->" + data.data[0].title);
-                    $scope.product.title = data.data[0].title;
-                });*/
-                
-                    $.ajax({
-                        type: 'GET',
-                        url: url,
-                        async: false,
-                        contentType: "application/json",
-                        dataType: 'jsonp',
-                        success: function(data) {
-                            console.log("data -> " + data);
-                        }
-                    });
-
             });
             
             

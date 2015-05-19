@@ -1,17 +1,17 @@
 <section class="marketplace-top" style="background-color: #ffffff">
     <div class="row" id="market-wrapper" style="background-color: #ffffff">
         <div class="item_image col-lg-8 col-lg-offset-2" style="margin-top: 20px; margin-bottom: 20px;">
-            <img data-effect="fade" class="aligncenter" ng-src="resources/{{selected_image}}" alt="">
+            <img data-effect="fade" class="aligncenter" ng-src="{{image}}" alt="">
         </div><!-- end item_image -->
     </div>
 </section>
 
-<section class="section1" style="padding-top: 0; margin-top: 0;">
+<section class="section1" style="padding-top: 0; margin-top: 0;" ng-controller="viewProductCtrl as view">
     <div class="container clearfix" style="padding-top: 0; margin-top: 0;">
         <div class="content col-lg-12 col-md-12 col-sm-12 clearfix" style="padding-bottom: 0px;padding-top: 0; margin-top: 0;">
             <div class="general-title text-center" style="padding-top: 0; margin-top: 0;">
-                <h3 style="padding-top: 0; margin-top: 0;">{{product.title}}</h3>
-                <p>by {{product.brand}}</p>
+                <h3 style="padding-top: 0; margin-top: 0;">{{view.title}}</h3>
+                <p>by {{view.authors}}</p>
                 <hr>
             </div>
 
@@ -23,7 +23,7 @@
                         <div class="details_section">
                             <h3>Item Details</h3>
                                      <span style="color: #2B2E31; font-size: 16px;">
-                                         ISBN: <br><span style="color: #696E74; font-size: 14px;">{{product.isbn}}</span>
+                                         ISBN: <br><span style="color: #696E74; font-size: 14px;">{{view.isbn}}</span>
                                      </span><br>
                                      <span style="color: #2B2E31; font-size: 16px;" ng-repeat="(key, array) in select_options">{{key}}: <br>
                                         
@@ -35,7 +35,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="theme_details">
                         <div class="item-description">
-                            <p>{{product.summary}}<a href="http://127.0.0.1:49822/api/images/{{product.specs_link}}" ng-if="product.specs_link != null"> Know more.</a></p>
+                            <p>{{view.description}}<a href="http://127.0.0.1:49822/api/images/{{product.specs_link}}" ng-if="product.specs_link != null"> Know more.</a></p>
                         </div><!-- item-description -->
                     </div><!-- theme_details -->
                 </div><!-- col-lg-6 -->
@@ -43,14 +43,13 @@
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="theme_details">
                         <div class="item_price">
-                            <h3><span><small>€</small>{{product.price}}</span></h3>
+                            <h3><span><small>€</small>{{view.price}}</span></h3>
                         </div><!-- item_price -->
                         <hr>
                         <div class="buttons">
-                            <a class="button btn-block large" data-toggle="popover" data-html="true" data-placement="top" title="Stock in shops"
-                               data-content="{{stockString}}">{{product.stock}} in Stock</a>
+                            <a class="button btn-block large">{{view.stock}} in Stock</a>
                             <!--<a class="button btn-block large" ng-if="current['stock'] > 0" href="#"><i class="fa fa-download"></i> BUY NOW</a>-->
-                            <ngcart-addtocart ng-if="current['stock']" id="{{ current.id }}" name="{{ product.name }}" price="{{ product.price }}" data="current"><i class="fa fa-shopping-cart"></i> Add to cart</ngcart-addtocart>
+                            <ngcart-addtocart ng-if="view.stock"  name="{{ view.title }}" price="{{ view.price }}" data="current"><i class="fa fa-shopping-cart"></i> Add to cart</ngcart-addtocart>
                         </div><!-- buttons -->
                     </div><!-- theme_details -->
                 </div><!-- col-lg-3 -->
