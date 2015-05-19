@@ -33,6 +33,12 @@ angular.module('myApp.viewProduct', ['ngRoute'])
                     console.log("author: " + google.volumeInfo.authors[i]);
                 }
                 
+                view.publisher = google.volumeInfo.publisher;
+                view.language = google.volumeInfo.language;
+                view.publishedDate = google.volumeInfo.publishedDate;
+                view.categories = google.volumeInfo.categories;
+                view.rating = google.volumeInfo.ratingsCount;
+                console.log(view.categories);
                
                 /*$scope.product = data.product;
                 $scope.current = {};
@@ -41,7 +47,7 @@ angular.module('myApp.viewProduct', ['ngRoute'])
 
 
                 /****set iva and shipping ***/
-                $ngCart.setTax(23);
+                $ngCart.setTax(0);
                 $ngCart.setShipping(0);
                 
             });
