@@ -39,3 +39,9 @@
 .ng-valid.ng-dirty {
     border-color: #78FA89;
 }*/
+
+.products-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

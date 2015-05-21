@@ -1,79 +1,22 @@
 {
-    "products":[
+    "books":[
         {
-            "id":"A001",
-            "name":"Cocoon Slim Backpack",
-            "category":"BACKPACK",
-            "brand":"COCOON",
-            "price":79.95,
-            "material":"Fabric",
-            "description":"Only 3.5-inches deep when fully packed, Cocoon's SLIM backpack cradles your MacBook Pro, iPad, and documents in luxurious interior pockets. Thanks to water-resistant ballistic nylon construction and waterproof zippers, SLIM keeps everything inside safe and dry. Its adjustable shoulder straps, minimalist design, and gunmetal hardware also provide loads of comfort and style. And the unique full-size GRID-IT! pocket lets you securely store items vertically, so you can say farewell to a messy bag.",
-            "subproducts":[
-                {
-                    "color":"BLACK",
-                    "size":"15",
-                    "stock":10
-                }
-            ],
-            "image_links":[
-                "book1.jpg",
-                "{DDE20922-76F6-11E4-8591-080027980C81}",
-                "{D5F64752-76F6-11E4-8591-080027980C81}"
-            ],
-            "specs_link":null
+            "isbn":"9780743258234",
+            "title":"Diffusion of Innovations, 5th Edition",
+            "image":"http://bks0.books.google.pt/books/content?id=9U1K5LjUOwEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            "price":5.95
         },
         {
-            "id":"A002",
-            "name":"Michael Kors 13\" Sleeve",
-            "category":"SLEEVE",
-            "brand":"MICHAEL",
-            "price":99.95,
-            "material":"Leather",
-            "description":"The MICHAEL Michael Kors Sleeve is the perfect designer case to protect and carry your MacBook Pro or MacBook Pro with Retina Display thanks to its Saffiano PVC construction and its interior padding. A rigid protective layer also reinforces additional backbone support to maximize durability. The Michael Kors signature letter hardware along the front provides a luxurious touch as well. And of course it's all individually crafted with the superior quality and strong attention to detail you expect from Michael Kors.",
-            "subproducts":[
-                {
-                    "color":"BLACK",
-                    "size":"13",
-                    "stock":5
-                }
-            ],
-            "image_links":[
-                "book1.jpg",
-                "{78401B71-76F9-11E4-8591-080027980C81}"
-            ],
-            "specs_link":null
+            "isbn": "9780743258233",
+            "title": "Diffusion of Innovations, 5th Edition",
+            "image": "http://bks0.books.google.pt/books/content?id=9U1K5LjUOwEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            "price": 30.95
         },
         {
-            "id":"A003",
-            "name":"Thule 13\" Stravan Sleeve",
-            "category":"SLEEVE",
-            "brand":"THULE",
-            "price":49.95,
-            "material":"Fabric",
-            "description":"The Thule Stravan Sleeve wraps your MacBook Pro, MacBook Pro with Retina display, or MacBook Air in densely padded, water-resistant protection.",
-            "subproducts":[
-                {
-                    "color":"GRAY",
-                    "size":"11",
-                    "stock":5
-                },
-                {
-                    "color":"GRAY",
-                    "size":"13",
-                    "stock":6
-                },
-                {
-                    "color":"GRAY",
-                    "size":"15",
-                    "stock":5
-                }
-            ],
-            "image_links":[
-                "book1.jpg",
-                "{7A7EAF79-76FA-11E4-8591-080027980C81}",
-                "{85A62BAD-76FA-11E4-8591-080027980C81}"
-            ],
-            "specs_link":null
+            "isbn": "9780743258232",
+            "title": "Diffusion of Innovations, 5th Edition",
+            "image": "http://bks0.books.google.pt/books/content?id=9U1K5LjUOwEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            "price": 79.95
         }
     ]
 }

@@ -15,7 +15,6 @@ angular.module('myApp.viewProduct', ['ngRoute'])
             var view = this;
             $http.get('partials/viewProduct/1.json').success(function(data) {
                 //$http.get('http://127.0.0.1:49822/api/products/' + $routeParams['productID']).success(function(data) {
-                console.log("SLB");
                 var google = data.google.items[0];
                 $scope.image = google.volumeInfo.imageLinks.thumbnail;
                 view.isbn = google.volumeInfo.industryIdentifiers[0].identifier;    
@@ -30,7 +29,6 @@ angular.module('myApp.viewProduct', ['ngRoute'])
                         view.authors += ", ";
                     
                     view.authors += google.volumeInfo.authors[i];
-                    console.log("author: " + google.volumeInfo.authors[i]);
                 }
                 
                 view.publisher = google.volumeInfo.publisher;
@@ -38,7 +36,6 @@ angular.module('myApp.viewProduct', ['ngRoute'])
                 view.publishedDate = google.volumeInfo.publishedDate;
                 view.categories = google.volumeInfo.categories;
                 view.rating = google.volumeInfo.ratingsCount;
-                console.log(view.categories);
                
                 /*$scope.product = data.product;
                 $scope.current = {};
