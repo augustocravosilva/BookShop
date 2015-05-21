@@ -6,7 +6,7 @@ angular.module('myApp.editUser', ['ngRoute'])
             .when('/edituser', {
                 controller: 'editUserCtrl',
                 templateUrl: 'partials/edituser/edituser.html'
-            })
+            });
     }])
     .controller('editUserCtrl', function ($http, $scope, Auth, $log, $location) {
         $scope.errorMessage = "";
