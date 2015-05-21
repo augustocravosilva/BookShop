@@ -45,13 +45,6 @@ public class Main {
         return port.getAllOrders();
     }
     
-    private static String hello(java.lang.String name) {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
-        return port.hello(name);
-    }
-    
     private static void saveOrder(warehouseejb.BookOrder order) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.

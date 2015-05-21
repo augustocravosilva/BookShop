@@ -21,72 +21,38 @@
     </div><!-- end message -->
 </section><!-- end section3 -->
 
+
 <section class="section1" ng-controller="HomeCtrl as home ">
-    <div class="container clearfix">
-        <div class="content col-lg-12 col-md-12 col-sm-12 clearfix">
+    <div class="content col-lg-12 col-md-12 col-sm-12 clearfix">
 
-            <div class="general-title text-center">
-                <h3>HOT PRODUCTS</h3>
-                <p>Our best seller items</p>
-                <hr>
-            </div>
+        <div class="general-title text-center">
+            <h3>What people say about us</h3>
+            <hr>
+        </div>
 
-            <div class="divider"></div>
-            <div class="portfolio-centered text-center" style="margin-top: -70px" >
-                <div class="recentitems portfolio container">
+        <div class="col-lg-6 col-md-6 col-sm-12 first">
+            <div class="testimonial">
+                <img data-effect="slide-bottom" class="alignleft img-circle effect-slide-bottom in" src="assets/Theme/demos/team_01.png" alt="" style="-webkit-transition: all 0.7s ease-in-out; transition: all 0.7s ease-in-out;">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                <div class="testimonial-meta">
+                    <h4>Mark Soto <small><a href="#">BlackTie.co</a></small></h4>
+                </div>
+            </div><!-- end dmbox -->
+        </div>
 
-                    <div class="portfolio-item col-md-3" style="margin-top: 20px"
-                         ng-repeat="product in home.hots | limitTo: 4">
-                        <div class="he-wrap tpl6">
-                            <img ng-src="{{home.link + 'images/' + product.image_links[0]}}" alt="">
-                            <div class="he-view">
-                                <div class="bg a0" data-animate="fadeIn">
-                                    <h3 class="a1" data-animate="fadeInDown">{{product.name}}</h3>
-                                    <a data-rel="prettyPhoto" href="{{home.link + 'images/' + product.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
-                                    <a ng-href="#products/{{product.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
-                                </div><!-- he bg -->
-                            </div><!-- he view -->
-                        </div><!-- he wrap -->
-                    </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 last">
+            <div class="testimonial">
+                <img data-effect="slide-bottom" class="alignleft img-circle effect-slide-bottom in" src="assets/Theme/demos/team_03.png" alt="" style="-webkit-transition: all 0.7s ease-in-out; transition: all 0.7s ease-in-out;">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                <div class="testimonial-meta">
+                    <h4>Lisa Meyer <small><a href="#">BlackTie.co</a></small></h4>
+                </div>
+            </div><!-- end dmbox -->
+        </div><!-- end col-lg-6 -->
 
-                </div><!-- portfolio -->
-
-            </div><!-- portfolio container -->
-        </div><!-- end content -->
-    </div><!-- end container -->
-
-    <div class="container clearfix" style="margin-top: -100px">
-        <div class="content col-lg-12 col-md-12 col-sm-12 clearfix">
-
-            <div class="general-title text-center">
-                <h3>FAST DELIVERY</h3>
-                <p>Order now get it tomorrow</p>
-                <hr>
-            </div>
-
-            <div class="divider"></div>
-            <div class="portfolio-centered text-center" style="margin-top: -70px">
-                <div class="recentitems portfolio container">
-
-                    <div class="portfolio-item col-md-3" style="margin-top: 20px"
-                         ng-repeat="product in home.monos | limitTo: 4">
-                        <div class="he-wrap tpl6">
-                            <img ng-src="{{home.link + 'images/' + product.image_links[0]}}" alt="">
-                            <div class="he-view">
-                                <div class="bg a0" data-animate="fadeIn">
-                                    <h3 class="a1" data-animate="fadeInDown">{{product.name}}</h3>
-                                    <a data-rel="prettyPhoto" href="{{home.link + 'images/' + product.image_links[0]}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-search"></i></a>
-                                    <a ng-href="#products/{{product.id}}" class="dmbutton a2" data-animate="fadeInUp"><i class="fa fa-link"></i></a>
-                                </div><!-- he bg -->
-                            </div><!-- he view -->
-                        </div><!-- he wrap -->
-                    </div>
-
-                </div><!-- portfolio -->
-
-            </div><!-- portfolio container -->
-        </div><!-- end content -->
-    </div><!-- end container -->
+    </div>
 </section><!-- end section -->
 
 

@@ -22,11 +22,6 @@ import javax.ejb.Stateless;
 @Stateless()
 public class WarehouseService {
     
-    @WebMethod(operationName = "hello")
-    public String hello(@WebParam(name = "name") String txt) {
-        return "Hello " + txt + " !";
-    }
-    
     @WebMethod(operationName = "getAllOrders")
     public List<BookOrder> getAllOrders() {
         try {
