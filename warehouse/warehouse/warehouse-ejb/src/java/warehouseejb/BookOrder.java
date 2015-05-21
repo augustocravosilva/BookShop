@@ -9,11 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import warehouseinterface.IBookOrder;
 
 
-
-public class BookOrder {
-    
+public class BookOrder implements IBookOrder {
     private Integer id;
     private String isbn;
     private String bookName;
@@ -40,58 +39,72 @@ public class BookOrder {
     }
     
     
+    @Override
     public Integer getId() {
         return id;
     }
     
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
     
+    @Override
     public String getIsbn() {
         return isbn;
     }
     
+    @Override
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
     
+    @Override
     public String getBookName() {
         return bookName;
     }
     
+    @Override
     public void setBookName(String bookName) {
         this.bookName = bookName;
     }
     
+    @Override
     public int getQuantity() {
         return quantity;
     }
     
+    @Override
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
     
+    @Override
     public String getStatus() {
         return status;
     }
     
+    @Override
     public void setStatus(String status) {
         this.status = status;
     }
     
+    @Override
     public String getOrderDate() {
         return orderDate;
     }
     
+    @Override
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
     
+    @Override
     public String getDispatchDate() {
         return dispatchDate;
     }
     
+    @Override
     public void setDispatchDate(String dispatchDate) {
         this.dispatchDate = dispatchDate;
     }
@@ -160,15 +173,15 @@ public class BookOrder {
         }
     }
     
-    static List<BookOrder> findAll() throws SQLException {
-        List<BookOrder> booksList = new LinkedList<>();
+    static List<IBookOrder> findAll() throws SQLException {
+        List<IBookOrder> booksList = new LinkedList<>();
         Connection conn = connect();
         Statement stmt = conn.createStatement();
         String query = "SELECT * FROM BookOrder ORDER BY orderDate DESC";
         ResultSet rs = stmt.executeQuery(query);
         
         while(rs.next()) {
-            BookOrder bookOrder = new BookOrder();
+            IBookOrder bookOrder = new BookOrder();
             bookOrder.setId(rs.getInt("id"));
             bookOrder.setBookName(rs.getString("bookName"));
             bookOrder.setIsbn(rs.getString("isbn"));
@@ -185,14 +198,14 @@ public class BookOrder {
     }
     
     
-    static BookOrder findById(int id) throws SQLException {
-        List<BookOrder> booksList = new LinkedList<>();
+    static IBookOrder findById(int id) throws SQLException {
+        List<IBookOrder> booksList = new LinkedList<>();
         Connection conn = connect();
         Statement stmt = conn.createStatement();
         String query = "SELECT * FROM BookOrder WHERE id = " + id;
         ResultSet rs = stmt.executeQuery(query);
         
-        BookOrder bookOrder = null;
+        IBookOrder bookOrder = null;
         
         if (rs.next()) {
             bookOrder = new BookOrder();
@@ -208,6 +221,5 @@ public class BookOrder {
         close(conn);
         
         return bookOrder;
-    }
-    
+    }    
 }

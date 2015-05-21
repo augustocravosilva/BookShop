@@ -9,49 +9,52 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jws.WebService;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import warehouseinterface.IBookOrder;
+import warehouseinterface.IWarehouseService;
 
-/**
- *
- * @author tiago
- */
-@WebService(serviceName = "WarehouseService")
+
 @Stateless()
-public class WarehouseService {
+public class WarehouseService implements IWarehouseService {
+
     
-    @WebMethod(operationName = "getAllOrders")
-    public List<BookOrder> getAllOrders() {
+    @Override
+    public List<IBookOrder> getAllOrders() {
+        System.out.println("->getAllOrders");
         try {
-            return BookOrder.findAll();
+            return BookOrder.findAll();           
         } catch (SQLException ex) {
             Logger.getLogger(WarehouseService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
     
-    @WebMethod(operationName = "getOrder")
-    public BookOrder getOrder(@WebParam(name = "id") int id) {
+    @Override
+    public IBookOrder getOrder(int id) {
+        System.out.println("->getOrder");
         try {
             return BookOrder.findById(id);
         } catch (SQLException ex) {
             Logger.getLogger(WarehouseService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
-    }
+        return null;    }
     
-    @WebMethod(operationName = "saveOrder")
-    public void saveOrder(@WebParam(name = "order") BookOrder order) {
+    @Override
+    public void saveOrder(IBookOrder order) {
+        System.out.println("->saveOrder");
+
         try {
             //TODO write your implementation code here:
-            order.save();
+            BookOrder o = (BookOrder) order;
+            o.save();
+            if (order.getStatus() == "closed") {
+                //inform store
+                
+            }
         } catch (SQLException ex) {
             Logger.getLogger(WarehouseService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
+
+
 }

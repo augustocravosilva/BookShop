@@ -3,13 +3,16 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package warehouseejb;
+package warehouseinterface;
+
+import java.io.Serializable;
 
 /**
  *
  * @author tiago
  */
-public interface IBookOrder {
+public interface IBookOrder extends Serializable  {
+    
     public Integer getId();
     
     public void setId(Integer id);

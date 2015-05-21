@@ -9,19 +9,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.ws.WebServiceRef;
-import warehouseejb.BookOrder;
-import warehouseejb.WarehouseService_Service;
+import warehouseinterface.IBookOrder;
+import warehouseinterface.IWarehouseService;
 
-/**
- *
- * @author tiago
- */
+
 public class WarehouseGUI extends javax.swing.JFrame {
-    @WebServiceRef(wsdlLocation = "META-INF/wsdl/localhost_8080/WarehouseService/WarehouseService.wsdl")
-    private static WarehouseService_Service service;
+    @EJB
+    private static IWarehouseService warehouseService;
     
     
     private HashMap<Integer, Integer> rowToId;
@@ -141,13 +138,12 @@ public class WarehouseGUI extends javax.swing.JFrame {
             String dateString = dt.format(date);
             
             for(int i: selected) {
-                BookOrder o = getOrder(rowToId.get(i));
+                IBookOrder o = warehouseService.getOrder(rowToId.get(i));
                 System.out.println(i + ": " + o.getBookName());
-                
                 o.setStatus(CLOSED);
                 o.setDispatchDate(dateString);
                 
-                saveOrder(o);
+                warehouseService.saveOrder(o);
                 initTable();
             }
         }
@@ -204,10 +200,10 @@ public class WarehouseGUI extends javax.swing.JFrame {
         }
         
         rowToId = new HashMap<>();
-        List<BookOrder> orders = getAllOrders();
+        List<IBookOrder> orders = warehouseService.getAllOrders();
         
         int i = 0;
-        for(BookOrder o: orders) {
+        for(IBookOrder o: orders) {
             System.out.print(".");
             model.addRow(new Object[]{o.getIsbn(), o.getBookName(), o.getQuantity(), o.getOrderDate(), o.getDispatchDate(), o.getStatus()});
             rowToId.put(i, o.getId());
@@ -215,26 +211,4 @@ public class WarehouseGUI extends javax.swing.JFrame {
         }
         
     }
-    
-    private static java.util.List<warehouseejb.BookOrder> getAllOrders() {
-        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
-        return port.getAllOrders();
-    }
-    
-    private static BookOrder getOrder(int id) {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
-        return port.getOrder(id);
-    }
-    
-    private static void saveOrder(warehouseejb.BookOrder order) {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        warehouseejb.WarehouseService port = service.getWarehouseServicePort();
-        port.saveOrder(order);
-    }
-    
-    
-    
 }

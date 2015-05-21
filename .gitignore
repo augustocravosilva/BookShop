@@ -32,3 +32,6 @@ hs_err_pid*
 /storeAPI/storeAPI/nbproject/private/
 >>>>>>> Stashed changes
 /storeAPI/storeAPI/dist/
+/warehouse/WarehouseInterface/nbproject/private/
+/warehouse/WarehouseInterface/build/
+/warehouse/WarehouseInterface/dist/
