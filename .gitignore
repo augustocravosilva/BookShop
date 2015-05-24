@@ -35,3 +35,9 @@ hs_err_pid*
 /warehouse/WarehouseInterface/nbproject/private/
 /warehouse/WarehouseInterface/build/
 /warehouse/WarehouseInterface/dist/
+/store/Application/WebApplication/nbproject/private/
+/store/Application/WebApplication/build/
+/store/Application/WebApplication/dist/
+/store/Application/StoreGUIApp/nbproject/private/
+/store/Application/StoreGUIApp/build/
+/store/Application/StoreGUIApp/dist/

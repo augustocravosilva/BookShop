@@ -13,5 +13,9 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface StoreBeanRemote {
+
+    void orderBook(String isbn, int quatity, int clientId);
+
+    String businessMethod();
     
 }
