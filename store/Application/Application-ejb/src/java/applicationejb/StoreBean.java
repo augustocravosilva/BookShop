@@ -5,23 +5,40 @@
  */
 package applicationejb;
 
+import applicationejbAPI.StoreBeanRemote;
+import logic.Client;
+import logic.Book;
+import java.util.Collection;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
 import javax.jms.Queue;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author augusto
+ * 
+ * To persist data:
+ * create a DB
+ * Add a pool to glassfish -> input user, password, url of DB
+ * Add a Resource -> Just choose the new pool
+ * Edit persistence.xml -> change the source to the new resource
+ * 
+ * 
  */
 @Stateless
 public class StoreBean implements StoreBeanRemote {
-    @Resource(mappedName = "jms/EAppQueue")
-    private Queue eAppQueue;
+    /*@Resource(mappedName = "jms/EAppQueue")
+    private Queue eAppQueue;*/
+    @PersistenceContext(unitName = "Application-ejbPU")
+    private EntityManager em;/*
     @Inject
-    @JMSConnectionFactory("java:comp/DefaultJMSConnectionFactory")
+    @JMSConnectionFactory("java:comp/DefaultJMSConnectionFactory")*/
     private JMSContext context;
 
     @Override
@@ -30,6 +47,21 @@ public class StoreBean implements StoreBeanRemote {
         
     }
     
+    @Override
+    public void newClient(String name, String adress, String email)
+    {
+        Client c = new Client();
+        c.setFullname(name);
+        c.setAdress(adress);
+        c.setEmail(email);
+        persist(c);
+    }
+    
+    
+    @Override
+    public List<Client> getClients() {
+        return em.createNamedQuery("Client.findAll").getResultList();
+    }
     
     
     //nova ordem de compra
@@ -55,14 +87,20 @@ public class StoreBean implements StoreBeanRemote {
     
     //update store stock
 
+    //REST test
     @Override
     public String businessMethod() {
+        Book b = new logic.Book("11113");
+        persist(b);
         return "hello!";
     }
 
     private void sendJMSMessageToEAppQueue(String messageData) {
-        context.createProducer().send(eAppQueue, messageData);
+      //  context.createProducer().send(eAppQueue, messageData);
     }
-    
+
+    private void persist(Object object) {
+        em.persist(object);
+    }   
     
 }

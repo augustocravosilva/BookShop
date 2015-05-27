@@ -5,7 +5,7 @@
  */
 package api;
 
-import applicationejb.StoreBeanRemote;
+import applicationejbAPI.StoreBeanRemote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;

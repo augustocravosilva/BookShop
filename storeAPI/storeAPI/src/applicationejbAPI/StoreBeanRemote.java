@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applicationejb;
+package applicationejbAPI;
 
+import logic.Client;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -17,5 +19,10 @@ public interface StoreBeanRemote {
     void orderBook(String isbn, int quatity, int clientId);
 
     String businessMethod();
+
+    void newClient(String name, String adress, String email);
+
+    List<Client> getClients();
+    
     
 }
