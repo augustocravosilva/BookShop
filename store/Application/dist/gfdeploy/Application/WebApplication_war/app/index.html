@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BookStore</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/icon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Theme links and scripts -->
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Ruda:400,900,700' rel='stylesheet' type='text/css'>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/Theme/css/font-awesome.css">
+    <!-- Bootstrap -->
+    <link href="assets/Theme/assets/css/bootstrap.css" rel="stylesheet">
+    <!-- Template Styles -->
+    <link rel="stylesheet" href="assets/Theme/css/style.css">
+    <link rel="stylesheet" href="assets/Theme/css/colors/brown.css">
+    <link rel="stylesheet" href="assets/js/advanced-datatable/media/css/jquery.dataTables.css">
+    <!-- Layer Slider -->
+    <link rel="stylesheet" href="assets/Theme/layerslider/css/layerslider.css" type="text/css">
+    <link rel="stylesheet" href="assets/myStyle.css" type="text/css">
+    <script src="assets/Theme/js/modernizr.js"></script>
+</head>
+
+<body ng-controller="globalController">
+
+<div class="topbar clearfix">
+    <div class="container">
+        <div class="col-lg-12 text-right">
+            <div class="social_buttons">
+                <a href="#/home" data-toggle="tooltip" data-placement="bottom" title="Facebook"><i
+                        class="fa fa-facebook"></i></a>
+                <a href="#/home" data-toggle="tooltip" data-placement="bottom" title="Twitter"><i class="fa fa-twitter"></i></a>
+                <a href="#/home" data-toggle="tooltip" data-placement="bottom" title="Google+"><i
+                        class="fa fa-google-plus"></i></a>
+                <a href="#/home" data-toggle="tooltip" data-placement="bottom" title="Dribbble"><i
+                        class="fa fa-dribbble"></i></a>
+                <a href="#/home" data-toggle="tooltip" data-placement="bottom" title="RSS"><i class="fa fa-rss"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- end container -->
+</div>
+<!-- end topbar -->
+
+<header class="header">
+    <div class="container">
+        <div class="site-header clearfix">
+            <div class="col-lg-3 col-md-3 col-sm-12 title-area">
+                <div class="site-title" id="title">
+                    <a href="#/home" title="">
+                        <h4>BOOK<span>STORE</span></h4>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Login Modal -->
+            <script type="text/ng-template" id="loginModal.html">
+                <div class="container">
+                    <div ng-show="activeForm == 'login'">
+                        <br/>
+
+                        <div ng-show="errorMessage.length > 0" class="alert alert-danger">{{errorMessage}}</div>
+                        <form class="form-login" ng-submit="ok()">
+                            <h2 class="form-login-heading">sign in now</h2>
+
+                            <div class="login-wrap">
+                                <input type="email" class="form-control" placeholder="E-mail" autofocus
+                                       ng-model="newuser.email" required>
+                                <input type="password" class="form-control" placeholder="Password"
+                                       ng-model="newuser.password" required>
+                                <button class="btn btn-theme btn-block" type="submit" id="modalLoginButton"><i
+                                        class="fa fa-lock"></i> SIGN IN
+                                </button>
+                                <hr>
+                                <div class="registration">
+                                    Don't have an account yet?<br/>
+                                    <a href="" ng-click="switchToRegister()">
+                                        Create an account
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div ng-show="activeForm == 'register'">
+                        <br/>
+
+                        <div ng-show="errorMessage.length > 0" class="alert alert-danger">{{errorMessage}}</div>
+                        <form class="form-login" ng-submit="ok()">
+                            <h2 class="form-login-heading">register account now</h2>
+
+                            <div class="login-wrap">
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-sm" placeholder="Name" autofocus
+                                           ng-model="newuser.name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="email" class="form-control input-sm" placeholder="E-mail" autofocus
+                                           ng-model="newuser.email" required>
+                                </div>
+
+                                <div class="form-group" ng-class="{'has-error': differentPasswords()}">
+                                    <input type="password" class="form-control input-sm" placeholder="Password"
+                                           ng-model="newuser.password" required>
+                                    <input type="password" class="form-control input-sm" placeholder="Confirm password"
+                                           ng-model="newuser.password2" required>
+
+                                    <p class="help-block" ng-show="differentPasswords()">Passwords must be equal</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="number" minlength="9" maxlength="9" class="form-control input-sm"
+                                           placeholder="Tax ID"
+                                           ng-model="newuser.tax_id" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-sm" placeholder="Street"
+                                           ng-model="newuser.street">
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-sm" placeholder="City"
+                                           ng-model="newuser.city">
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-sm" size="4" maxlength="4"
+                                           placeholder="Zip Code 1"
+                                           ng-model="newuser.zip_code1">
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-sm" size="3" maxlength="3"
+                                           placeholder="Zip Code 2"
+                                           ng-model="newuser.zip_code2">
+                                </div>
+
+                                <button class="btn btn-theme btn-block" type="submit" id="modalRegisterButton"
+                                        ng-disabled="invalidForm()"><i
+                                        class="fa fa-lock"></i> REGISTER
+                                </button>
+                                <hr>
+                                <div class="login">
+                                    Already have an account?<br/>
+                                    <a href="" ng-click="switchToLogin()">
+                                        Login
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </script>
+
+            <div class="col-lg-9 col-md-12 col-sm-12">
+                <div id="nav" class="right">
+                    <div class="container clearfix">
+                        <ul id="jetmenu" class="jetmenu blue">
+                            <li class="active home"><a href="#home">Home</a>
+                            </li>
+                            <li class="products"><a href="#/viewProducts/">Books</a>
+                            </li>
+                            <li class="faq"><a href="#/faq">FAQ</a>
+                            <li class="contact"><a href="#/contact">Contact us</a></li>
+
+                            <li class="pull-right" ng-show="!hasUser()"><a href="" ng-click="open(sm)">Login</a></li>
+                            <li class="pull-right" ng-show="hasUser()">
+                                <div style="margin-top: 7px">
+
+                                    <div class="row text-right">
+                                        Welcome {{user.name | TruncateWords: 1}}!
+                                    </div>
+                                    <div class="row text-right">
+                                        <a href="#/history">Account</a> |
+                                        <a href="" class="text-muted" ng-click="logout()">Logout</a>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="checkout pull-right">
+                                <a ng-href="#/checkout">
+                                    <ngcart-summary></ngcart-summary>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- nav -->
+            </div>
+            <!-- title area -->
+        </div>
+        <!-- site header -->
+    </div>
+    <!-- end container -->
+</header>
+<!-- end header -->
+
+
+<!--<ul class="menu">-->
+<!--<li><a href="#/view1">view1</a></li>-->
+<!--<li><a href="#/">home</a></li>-->
+<!--<li><a href="#/viewProducts">viewProducts</a></li>-->
+<!--<li><a href="#/products/1">viewProduct</a></li>-->
+<!--<li><a href="#/history">History</a></li>-->
+<!--<li><a href="#/checkout">Checkout</a></li>-->
+<!--<li><a href="#/faq">FAQ</a></li>-->
+<!--<li><a href="#/contact">Contact</a></li>-->
+<!--</ul>-->
+<!--<div>Angular seed app: v<span app-version></span></div>-->
+
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div ng-view></div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="widget col-lg-3 col-md-3 col-sm-12">
+            <h4 class="title">About us</h4>
+
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry"s standard dummy text ever since the 1500s..</p>
+            <a class="button small" href="#">read more</a>
+        </div>
+        <!-- end widget -->
+        <div class="widget col-lg-3 col-md-3 col-sm-12">
+            <h4 class="title">Recent Products</h4>
+            <ul class="recent_posts">
+                <li>
+                    <a href="home1.html#">
+                        <img src="assets/Theme/demos/recent_post_01.png" alt=""/>Our New Dashboard Is Here
+                    </a>
+                    <a class="readmore" href="#">read more</a>
+                </li>
+                <li>
+                    <a href="home1.html#">
+                        <img src="assets/Theme/demos/recent_post_02.png" alt=""/>Design Is In The Air
+                    </a>
+                    <a class="readmore" href="#">read more</a>
+                </li>
+            </ul>
+            <!-- recent posts -->
+        </div>
+        <!-- end widget -->
+        <div class="widget col-lg-3 col-md-3 col-sm-12">
+            <h4 class="title">Get In Touch</h4>
+            <ul class="contact_details">
+                <li><i class="fa fa-envelope-o"></i> info@bookstore.com</li>
+                <li><i class="fa fa-phone-square"></i> +34 5565 6555</li>
+                <li><i class="fa fa-home"></i> Some Fine Address, 887, Porto, Portugal.</li>
+                <li><a href="#/contact"><i class="fa fa-envelope"></i> Contact us</a></li>
+            </ul>
+            <!-- contact_details -->
+        </div>
+        <!-- end widget -->
+        <div class="widget col-lg-3 col-md-3 col-sm-12">
+            <h4 class="title">Flickr Stream</h4>
+            <ul class="flickr">
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_01.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_02.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_03.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_04.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_05.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_06.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_07.jpg"></a></li>
+                <li><a href="#/home"><img alt="" src="assets/Theme/demos/flickr_08.jpg"></a></li>
+            </ul>
+        </div>
+        <!-- end widget -->
+    </div>
+    <!-- end container -->
+
+    <div class="copyrights">
+        <div class="container">
+            <div class="col-lg-6 col-md-6 col-sm-12 columns pull-right">
+
+            </div>
+            <p class="pull-right">Copyright © 2014 - All rights reserved.</p>
+            <!-- end widget -->
+            <!--<div class="col-lg-6 col-md-6 col-sm-12 columns text-right">-->
+            <!--<div class="footer-menu right">-->
+            <!--<ul class="menu">-->
+            <!--<li><a href="#">Home</a></li>-->
+            <!--<li><a href="#">About</a></li>-->
+            <!--<li><a href="#">Sitemap</a></li>-->
+            <!--<li><a href="#">Site Terms</a></li>-->
+            <!--<li><a href="#">Contact</a></li>-->
+            <!--</ul>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!-- end large-6 -->
+        </div>
+        <!-- end container -->
+    </div>
+    <!-- end copyrights -->
+</footer>
+<div class="dmtop">Scroll to Top</div>
+
+<!-- end footer -->
+
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="assets/Theme/assets/js/jquery.js"></script>
+<script src="assets/Theme/assets/js/bootstrap.min.js"></script>
+<script src="assets/Theme/assets/js/jquery.unveilEffects.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
+<script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
+<script src="bower_components/ngcart/dist/ngCart.js"></script>
+<!-- break -->
+
+
+<!-- Theme scripts-->
+<script src="assets/Theme/js/retina-1.1.0.js"></script>
+<script src="assets/Theme/js/jquery.hoverdir.js"></script>
+<script src="assets/Theme/js/owl.carousel.js"></script>
+<script src="assets/Theme/js/jetmenu.js"></script>
+<script src="assets/Theme/js/jquery.hoverex.min.js"></script>
+<script src="assets/Theme/js/jquery.prettyPhoto.js"></script>
+<!--<script src="assets/Theme/js/jquery.isotope.min.js"></script>-->
+<!--<script src="assets/angular-isotope.js"></script>-->
+<!-- Added -->
+<script src="assets/Theme/js/custom.js"></script>
+
+<!-- break -->
+<script src="app.js"></script>
+<script src="partials/home/home.js"></script>
+<script src="partials/viewProduct/singleProduct.js"></script>
+<script src="partials/history/history.js"></script>
+<script src="partials/edituser/edituser.js"></script>
+<script src="partials/viewCheckout/viewCheckout.js"></script>
+<script src="partials/faq/faq.js"></script>
+<script src="partials/contact/contact.js"></script>
+<script src="partials/viewProducts/viewProducts.js"></script>
+<script src="services/auth.js"></script>
+<script src="components/version/version.js"></script>
+<script src="components/version/version-directive.js"></script>
+<script src="components/version/interpolate-filter.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#popularitems").owlCarousel({
+            items: 3,
+            lazyLoad: true,
+            navigation: false
+        });
+        $('#jetmenu .checkout a').css("border-top", $('body').css("background-color"));
+    });
+</script>
+<style>
+    #DataTables_Table_0_paginate {
+        float: right;
+    }
+
+    #DataTables_Table_0_paginate a {
+        margin: 2px;
+    }
+</style>
+</body>
+</html>

@@ -23,6 +23,8 @@ public interface StoreBeanRemote {
     void newClient(String name, String adress, String email);
 
     List<Client> getClients();
+
+    String test();
     
     
 }

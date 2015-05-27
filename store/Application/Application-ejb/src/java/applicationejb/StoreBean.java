@@ -105,5 +105,10 @@ public class StoreBean implements StoreBeanRemote {
     private void sendJMSMessageToEAppQueue(String messageData) {
         context.createProducer().send(eAppQueue, messageData);
     }
+
+    @Override
+    public String test() {
+        return ((Client)(em.createNamedQuery("Client.findAll").getResultList().get(0))).getFullname();
+    }
     
 }
