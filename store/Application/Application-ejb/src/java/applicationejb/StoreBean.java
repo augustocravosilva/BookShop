@@ -90,7 +90,7 @@ public class StoreBean implements StoreBeanRemote {
     //REST test
     @Override
     public String businessMethod() {
-        Book b = new logic.Book("11113");
+        Book b = new logic.Book("a11113");
         persist(b);
         return "hello!";
     }

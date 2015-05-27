@@ -9,16 +9,20 @@ import logic.Client;
 import applicationejbAPI.StoreBeanRemote;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  *
  * @author augusto
  */
 public class GuiFrame extends javax.swing.JFrame {
-    @EJB
-    private static StoreBeanRemote storeBean;
-
+    private StoreBeanRemote storeBean = lookupStoreBeanRemote();
+    
     /**
      * Creates new form GuiFrame
      */
@@ -245,4 +249,15 @@ public class GuiFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables
+
+        private StoreBeanRemote lookupStoreBeanRemote() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (StoreBeanRemote) c.lookup("java:global/Application/Application-ejb/StoreBean!applicationejbAPI.StoreBeanRemote");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
 }

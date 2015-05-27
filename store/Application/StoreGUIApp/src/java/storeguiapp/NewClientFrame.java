@@ -154,8 +154,8 @@ public class NewClientFrame extends javax.swing.JFrame {
 
     private StoreBeanRemote lookupStoreBeanRemote() {
         try {
-            Context c = new InitialContext();
-            return (StoreBeanRemote) c.lookup("java:comp/env/StoreBean");
+            javax.naming.Context c = new InitialContext();
+            return (StoreBeanRemote) c.lookup("java:global/Application/Application-ejb/StoreBean!applicationejbAPI.StoreBeanRemote");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

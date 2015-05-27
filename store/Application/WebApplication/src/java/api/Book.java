@@ -27,6 +27,8 @@ import javax.ws.rs.PUT;
 public class Book {
     StoreBeanRemote storeBean = lookupStoreBeanRemote();
 
+    
+    
     @Context
     private UriInfo context;
 
@@ -61,11 +63,12 @@ public class Book {
     private StoreBeanRemote lookupStoreBeanRemote() {
         try {
             javax.naming.Context c = new InitialContext();
-            return (StoreBeanRemote) c.lookup("java:global/Application/Application-ejb/StoreBean!applicationejb.StoreBeanRemote");
+            return (StoreBeanRemote) c.lookup("java:global/Application/Application-ejb/StoreBean!applicationejbAPI.StoreBeanRemote");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
         }
     }
+
 
 }
