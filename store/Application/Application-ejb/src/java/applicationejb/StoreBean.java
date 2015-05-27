@@ -33,13 +33,15 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class StoreBean implements StoreBeanRemote {
-    /*@Resource(mappedName = "jms/EAppQueue")
-    private Queue eAppQueue;*/
-    @PersistenceContext(unitName = "Application-ejbPU")
-    private EntityManager em;/*
+    @Resource(mappedName = "jms/EAppQueue")
+    private Queue eAppQueue;
     @Inject
-    @JMSConnectionFactory("java:comp/DefaultJMSConnectionFactory")*/
+    @JMSConnectionFactory("jms/EAppQueueFactory")
     private JMSContext context;
+
+    @PersistenceContext(unitName = "Application-ejbPU")
+    private EntityManager em;
+    
 
     @Override
     public void orderBook(String isbn, int quatity, int clientId) {
@@ -90,17 +92,18 @@ public class StoreBean implements StoreBeanRemote {
     //REST test
     @Override
     public String businessMethod() {
-        Book b = new logic.Book("a11113");
-        persist(b);
+       // Book b = new logic.Book("a11113");
+       // persist(b);
+        sendJMSMessageToEAppQueue("lalala");
         return "hello!";
-    }
-
-    private void sendJMSMessageToEAppQueue(String messageData) {
-      //  context.createProducer().send(eAppQueue, messageData);
     }
 
     private void persist(Object object) {
         em.persist(object);
     }   
+
+    private void sendJMSMessageToEAppQueue(String messageData) {
+        context.createProducer().send(eAppQueue, messageData);
+    }
     
 }
