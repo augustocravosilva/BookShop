@@ -9,7 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import warehouseinterface.IBookOrder;
@@ -17,8 +21,8 @@ import warehouseinterface.IWarehouseService;
 
 
 public class WarehouseGUI extends javax.swing.JFrame {
-    @EJB
-    private static IWarehouseService warehouseService;
+    private IWarehouseService warehouseService = lookupStoreBeanRemote();
+   
     
     
     private HashMap<Integer, Integer> rowToId;
@@ -210,5 +214,15 @@ public class WarehouseGUI extends javax.swing.JFrame {
             i++;
         }
         
+    }
+    
+    private IWarehouseService lookupStoreBeanRemote() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (IWarehouseService) c.lookup("java:global/warehouse/warehouse-ejb/WarehouseService!warehouseinterface.IWarehouseService");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
     }
 }
