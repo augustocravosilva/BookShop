@@ -46,7 +46,7 @@ public class Book {
     @Produces("application/json")
     public String getJson() {
         //TODO return proper representation object
-        return storeBean.businessMethod();
+        return "slb";
         //throw new UnsupportedOperationException();
     }
 

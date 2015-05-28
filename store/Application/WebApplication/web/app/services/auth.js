@@ -58,7 +58,7 @@ angular.module('myApp')
         login: function (newuser, success, error) {
             /*
                  $http.post(link + '/Customers/login', user)*/
-            $http.get('login.json', user)
+            $http.get('http://localhost:8080/WebApplication/webresources/client/login', user)
                  
             /*$http.post(link + 'Customers/login', newuser)*/.success(function (res) {
                 if (res.error)
