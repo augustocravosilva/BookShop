@@ -87,11 +87,34 @@ public class Client {
            return "{\"error\": \"wrong credentials\"}";
             //return false;
         }
-            
-            System.out.println("email-> " + json.getString("email") + "   password-> " + json.getString("password"));
         
         //TODO: LOGIN call EJB funtion
         //return true;
         return "{\"id\":\"C001\",\"name\":\"Manuel Pereira\",\"tax_id\":\"177142430\",\"email\":\"manu@gmail.com\",\"street\":\"Rua das Flores N 123\",\"city\":\"Porto\",\"zip_code1\":\"4100\",\"zip_code2\":\"000\"}";
     }
+    
+    /**
+     * Register a user
+     * @param user details
+     * @return user id
+     */
+    @POST
+    @Produces("application/json")
+    @Consumes({"application/json"})
+    public String register(JsonObject json) {
+        System.out.println("json-> " + json.toString());
+
+        if (!json.containsKey("name") || !json.containsKey("email") 
+                || !json.containsKey("password") || !json.containsKey("street") 
+                || !json.containsKey("city") || !json.containsKey("zip_code1") 
+                || !json.containsKey("zip_code2")) {
+            return "{\"error\": \"wrong parameters\"}";
+        }
+
+        //TODO: LOGIN call EJB funtion
+        //return id;
+        return "{\"id\":\"C022\"}";
+    }
+    
+    
 }
