@@ -11,10 +11,10 @@ angular.module('myApp.viewProduct', ['ngRoute'])
             controller: 'viewProductCtrl'
         });
         }])
-        .controller('viewProductCtrl', ['$http', '$scope', 'ngCart' ,function($http, $scope, $ngCart) {
+        .controller('viewProductCtrl', ['$http', '$scope','$routeParams', 'ngCart' ,function($http, $scope,$routeParams, $ngCart) {
             var view = this;
-            $http.get('partials/viewProduct/1.json').success(function(data) {
-                //$http.get('http://127.0.0.1:49822/api/products/' + $routeParams['productID']).success(function(data) {
+            //$http.get('partials/viewProduct/1.json').success(function(data) {
+                $http.get('http://localhost:8080/WebApplication/webresources/books/' + $routeParams['productID']).success(function(data) {
                 var google = data.google.items[0];
                 $scope.image = google.volumeInfo.imageLinks.thumbnail;
                 view.isbn = google.volumeInfo.industryIdentifiers[0].identifier;    

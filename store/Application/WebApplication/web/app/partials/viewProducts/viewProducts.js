@@ -39,7 +39,7 @@ angular.module('myApp.viewProducts', ['ngRoute'])
                 return view.selectedPriceRange;
             };
         
-            $http.get('partials/viewProducts/new_list.json').success(function(data) { //TODO: Change this
+            $http.get('http://localhost:8080/WebApplication/webresources/books').success(function(data) { //TODO: Change this
                 view.categoryHasResults = true;
                 view.books = data.books;
 
