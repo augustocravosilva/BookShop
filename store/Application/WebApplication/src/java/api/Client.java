@@ -62,13 +62,14 @@ public class Client {
     @Produces("application/json")
     @Consumes({"application/json"})
     public String login(JsonObject json) {
-       
+        System.out.println("json-> " + json.toString());
+
         if(!json.containsKey("email") || !json.containsKey("password")) {
            return "{\"error\": \"wrong credentials\"}";
             //return false;
         }
             
-            System.out.println("email-> " + json.getString("email") + "   password-> " + json.getString("email"));
+            System.out.println("email-> " + json.getString("email") + "   password-> " + json.getString("password"));
         
         //TODO: LOGIN call EJB funtion
         //return true;
