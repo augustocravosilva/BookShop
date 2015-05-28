@@ -39,9 +39,10 @@ angular.module('myApp')
                  $http.get('login.json', user)
              */
             $log.log("Antes edit: ");
-            $log.log(user);
+            $log.log("user: " + JSON.stringify(user));
+            $log.log("newuser: " + JSON.stringify(newuser));
 
-            $http.put(link + 'Customers/' + user.id, newuser).success(function (res) {
+            $http.put('http://localhost:8080/WebApplication/webresources/client/' + user.id, newuser).success(function (res) {
                 if (res.error)
                     error(res.error);
                 else {

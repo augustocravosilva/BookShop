@@ -5,18 +5,16 @@
 */
 package api;
 
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 
 /**
  * REST Web Service
@@ -53,8 +51,29 @@ public class Client {
      * @return an HTTP response with content of the updated or created resource.
      */
     @PUT
+    @Path("{id}")
     @Consumes("application/json")
-    public void putJson(String content) {
+    @Produces("application/json")
+    public String putJson(@PathParam("id") String id, JsonObject json) {
+        System.out.println("id-> " + id);
+        System.out.println("json-> " + json.toString());
+        /** 
+         * json brings only fields to change so it could contain:
+         * - name
+         * - tax_id
+         * - email
+         * - street
+         * - city
+         * - zip_code1
+         * - zip_code1
+         * - password & password2
+        */
+        
+        if(id == null) // If something went wrong
+            return "{\"error\": \"invalid request\"}";
+        
+        //Fake data for now
+        return "{\"id\":\"C001\",\"name\":\"Manuel Pereira\",\"tax_id\":\"177142430\",\"email\":\"manu@gmail.com\",\"street\":\"Rua das Flores N 123\",\"city\":\"Porto\",\"zip_code1\":\"4100\",\"zip_code2\":\"000\"}";
     }
     
     @POST
