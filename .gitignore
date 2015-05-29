@@ -41,3 +41,5 @@ hs_err_pid*
 /store/Application/StoreGUIApp/nbproject/private/
 /store/Application/StoreGUIApp/build/
 /store/Application/StoreGUIApp/dist/
+/storeAPI/storeAPI/build/
+/store/Application/dist/
