@@ -48,7 +48,7 @@ angular.module('myApp.viewCheckout', ['ngRoute'])
 
             view.checkingOut = true;
 
-            $http.post(link + 'orders', order).success(function(data) {
+            $http.post('http://localhost:8080/WebApplication/webresources/orders', order).success(function(data) {
                 console.log("Order completed ID: " + data);
                 view.checkingOut = false;
 

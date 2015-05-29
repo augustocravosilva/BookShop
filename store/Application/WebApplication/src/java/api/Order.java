@@ -74,7 +74,7 @@ public class Order {
     
     
     /**
-     * Register a user
+     * Register an order (maybe multiple orders if multiple lines)
      *
      * @param user details
      * @return user id
@@ -82,7 +82,7 @@ public class Order {
     @POST
     @Produces("application/json")
     @Consumes({"application/json"})
-    public String register(JsonObject json) {
+    public String registerOrder(JsonObject json) {
         System.out.println("making order -> " + json.toString());
         //{"customer":"C001","lines":[{"product_id":"A002.BLACK.13","quantity":1}]}
 
