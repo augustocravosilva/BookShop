@@ -52,7 +52,7 @@
                         <div class="buttons">
                             <a class="button btn-block large">{{ view.stock }} in Stock</a>
                             <!--<a class="button btn-block large" ng-if="current['stock'] > 0" href="#"><i class="fa fa-download"></i> BUY NOW</a>-->
-                            <ngcart-addtocart ng-if="view.stock"  id="{{ view.isbn }}" name="{{ view.title }}" price="{{ view.price }}" data="current"><i class="fa fa-shopping-cart"></i> Add to cart</ngcart-addtocart>
+                            <ngcart-addtocart ng-if="view.stock"  id="{{ view.isbn }}" name="{{ view.title }}" price="{{ view.price }}" data="view"><i class="fa fa-shopping-cart"></i> Add to cart</ngcart-addtocart>
                         </div><!-- buttons -->
                         <hr>
                         <div class="rating text-center" ng-show="view.rating == 0">
