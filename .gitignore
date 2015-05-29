@@ -21,16 +21,13 @@ hs_err_pid*
 /warehouse/warehouse/nbproject/private/
 /warehouse/warehouse/warehouse-ejb/nbproject/private/
 /warehouse/warehouse-ac/nbproject/private/
-<<<<<<< Updated upstream
 /warehouse/warehouse-ac/build/
 /warehouse/warehouse/warehouse-ejb/build/
 /warehouse/warehouse/build/
 /warehouse/warehouse/warehouse-ejb/dist/
 /warehouse/warehouse-ac/dist/
 /warehouse/warehouse/dist/
-=======
 /storeAPI/storeAPI/nbproject/private/
->>>>>>> Stashed changes
 /storeAPI/storeAPI/dist/
 /warehouse/WarehouseInterface/nbproject/private/
 /warehouse/WarehouseInterface/build/
@@ -43,3 +40,4 @@ hs_err_pid*
 /store/Application/StoreGUIApp/dist/
 /storeAPI/storeAPI/build/
 /store/Application/dist/
+/warehouse/WarehouseInterface/build

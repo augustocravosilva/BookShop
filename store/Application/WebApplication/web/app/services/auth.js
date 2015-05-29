@@ -16,18 +16,19 @@ angular.module('myApp')
                  $http.get('login.json', user)
              */
             $log.log("Antes register: ");
-            $log.log(user);
+            $log.log(JSON.stringify(user));
 
-            $http.post(link + 'Customers/', newuser).success(function (res) {
+            $http.post('http://localhost:8080/WebApplication/webresources/client/', newuser).success(function (res) {
+                $log.log("res - > " + JSON.stringify(res));
                 if (res.error)
                     error(res.error);
                 else {
                     user = newuser;
-                    user['id'] = res;
+                    user['id'] = res.id; //previous res only 
                     $cookieStore.put('user', user);
 
                     $log.log("Depois register: ");
-                    $log.log(user);
+                    $log.log(JSON.stringify(user));
 
                     success(res);
                 }
@@ -39,9 +40,10 @@ angular.module('myApp')
                  $http.get('login.json', user)
              */
             $log.log("Antes edit: ");
-            $log.log(user);
+            $log.log("user: " + JSON.stringify(user));
+            $log.log("newuser: " + JSON.stringify(newuser));
 
-            $http.put(link + 'Customers/' + user.id, newuser).success(function (res) {
+            $http.put('http://localhost:8080/WebApplication/webresources/client/' + user.id, newuser).success(function (res) {
                 if (res.error)
                     error(res.error);
                 else {
@@ -56,9 +58,10 @@ angular.module('myApp')
             }).error(error);
         },
         login: function (newuser, success, error) {
+                    $log.log("->" + JSON.stringify(newuser));
             /*
                  $http.post(link + '/Customers/login', user)*/
-            $http.get('login.json', user)
+            $http.post('http://localhost:8080/WebApplication/webresources/client/login', newuser)
                  
             /*$http.post(link + 'Customers/login', newuser)*/.success(function (res) {
                 if (res.error)
