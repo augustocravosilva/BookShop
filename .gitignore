@@ -1,3 +1,4 @@
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -38,6 +39,7 @@ hs_err_pid*
 /store/Application/StoreGUIApp/nbproject/private/
 /store/Application/StoreGUIApp/build/
 /store/Application/StoreGUIApp/dist/
+/warehouse/WarehouseInterface/build
 /storeAPI/storeAPI/build/
 /store/Application/dist/
 /warehouse/WarehouseInterface/build

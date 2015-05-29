@@ -20,7 +20,7 @@ angular.module('myApp.history', ['ngRoute'])
         //$http.get(link + '/orders/?Customer=' + Auth.getCurrentUser().id)
         //$http.get('partials/history/history.json')
         $scope.refreshOrders = function () {
-            $http.get(link + 'orders/?Customer=' + Auth.getCurrentUser().id).success(function (res) {
+            $http.get('http://localhost:8080/WebApplication/webresources/orders/client/' + Auth.getCurrentUser().id).success(function (res) {
                 $log.log("Novas orders: ");
                 $log.log(res);
 
@@ -51,7 +51,7 @@ angular.module('myApp.history', ['ngRoute'])
     .controller('historyModalCtrl', function ($scope, $http, $log, item, $modalInstance, $location) {
         $scope.order = {};
 
-        $http.get(link + 'orders/' + item.id).success(function (res) {
+        $http.get('http://localhost:8080/WebApplication/webresources/orders/' + item.id).success(function (res) {
             $scope.order = res;
         }).error(function (error) {
             $log.error(error);
