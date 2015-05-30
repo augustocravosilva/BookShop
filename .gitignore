@@ -43,3 +43,5 @@ hs_err_pid*
 /storeAPI/storeAPI/build/
 /store/Application/dist/
 /warehouse/WarehouseInterface/build
+/google-http-client/nbproject/private/
+/google-http-client/build/

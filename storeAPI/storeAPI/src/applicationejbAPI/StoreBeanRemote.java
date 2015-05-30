@@ -8,6 +8,7 @@ package applicationejbAPI;
 import logic.Client;
 import java.util.List;
 import javax.ejb.Remote;
+import simple.SimpleBook;
 
 /**
  *
@@ -25,6 +26,12 @@ public interface StoreBeanRemote {
     List<Client> getClients();
 
     String test();
+
+    List<SimpleBook> getBooks();
+
+    SimpleBook getBook(String isbn);
+
+    String getGoogleBookAsString(String isbn);
     
     
 }

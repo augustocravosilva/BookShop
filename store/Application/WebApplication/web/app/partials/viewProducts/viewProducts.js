@@ -41,11 +41,11 @@ angular.module('myApp.viewProducts', ['ngRoute'])
         
             $http.get('http://localhost:8080/WebApplication/webresources/books').success(function(data) { //TODO: Change this
                 view.categoryHasResults = true;
-                view.books = data.books;
+                view.books = data;
 
                 console.log("...");
 
-                if (data.books.length === 0) {
+                if (data.length === 0) {
                     view.categoryHasResults = false;
                 }
             });
