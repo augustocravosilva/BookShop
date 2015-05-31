@@ -38,6 +38,13 @@ public class BookOrder implements IBookOrder {
         this.status = status;
     }
     
+    public BookOrder(String isbn, String bookName, int quantity, String orderDate) {
+        this.isbn = isbn;
+        this.bookName = bookName;
+        this.quantity = quantity;
+        this.orderDate = orderDate;
+    }
+    
     
     @Override
     public Integer getId() {
