@@ -106,7 +106,7 @@ public class GuiFrame extends javax.swing.JFrame {
         setBackground(new java.awt.Color(153, 204, 255));
         setName("store"); // NOI18N
 
-        booksCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        booksCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Loading" }));
         booksCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 booksComboActionPerformed(evt);
@@ -130,7 +130,7 @@ public class GuiFrame extends javax.swing.JFrame {
 
         jLabel2.setText("New Sell - Client");
 
-        clientCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        clientCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Loading" }));
         clientCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clientComboActionPerformed(evt);
@@ -190,7 +190,7 @@ public class GuiFrame extends javax.swing.JFrame {
             }
         });
 
-        book_info_button.setText("I");
+        book_info_button.setText("Info");
         book_info_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 book_info_buttonActionPerformed(evt);
@@ -244,7 +244,7 @@ public class GuiFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(booksCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(book_info_button, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(book_info_button, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
