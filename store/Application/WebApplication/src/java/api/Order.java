@@ -9,9 +9,7 @@ import applicationejbAPI.StoreBeanRemote;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonValue;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
@@ -108,7 +106,7 @@ public class Order {
         for(int i = 0; i < json.getJsonArray("lines").size(); i++)
         {
             JsonObject o = (JsonObject)json.getJsonArray("lines").get(i);
-            int id = storeBean.orderBook(o.getString("product_id"), o.getInt("quantity"), Integer.parseInt(json.getString("customer")));
+            int id = storeBean.orderBook(o.getString("product_id"), o.getInt("quantity"), json.getInt("customer"));
             out.append(id);
             if(i < json.getJsonArray("lines").size()-1)
                 out.append(",");

@@ -135,10 +135,9 @@ public class Client {
         System.out.println("json-> " + json.toString());
 
         if (!json.containsKey("name") || !json.containsKey("email") 
-                || !json.containsKey("password") || !json.containsKey("street") 
-                || !json.containsKey("city") || !json.containsKey("zip_code1") 
-                || !json.containsKey("zip_code2")) {
-            return "{\"error\": \"wrong parameters\"}";
+                || !json.containsKey("password")
+                || !json.containsKey("city")) {
+            throw new WebApplicationException("{\"error\": \"wrong parameters\"}", 400);
         }
         
         //TODO adress

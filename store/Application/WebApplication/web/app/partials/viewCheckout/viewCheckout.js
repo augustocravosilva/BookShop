@@ -22,18 +22,6 @@ angular.module('myApp.viewCheckout', ['ngRoute'])
         view.ngCart = ngCart;
         view.customer = Auth.getCurrentUser();
 
-        view.newAddress = false;
-
-        view.address = {};
-
-        view.setNewAddress = function (x) {
-          view.newAddress = x;
-        };
-
-        view.isNewAddress = function () {
-            return view.newAddress;
-        };
-
 
         //order.lines.push({"product_id": "A001","quantity":2});
         view.submitOrder = function() {

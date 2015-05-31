@@ -66,24 +66,7 @@
                         </select>
 
                         <!--<div class="clearfix"></div>-->
-                        <div class="divider"></div>
-                        <a href="" class="dmbutton2" ng-hide="checkout.isNewAddress()" ng-click='checkout.setNewAddress(true)'>Send to another address</a>
-                        <a href="" class="dmbutton2" ng-show="checkout.isNewAddress()" ng-click='checkout.setNewAddress(false)'>Send to saved address</a>
-                        <div class="address" ng-show="checkout.isNewAddress()">
-                            <h5 class="title">DELIVERY INFORMATION</h5>
-
-                            <label for="baddress">Delivery Address</label>
-                            <input type="text" name="baddress" id="baddress" class="form-control" placeholder="Address line 1" ng-model="checkout.address.delivery_address" ng-required="checkout.isNewAddress()">
-                            <label for="bcity">Delivery City</label>
-                            <input type="text" name="bcity" id="bcity" class="form-control" placeholder="Your city" ng-model="checkout.address.delivery_city" ng-required="checkout.isNewAddress()">
-                            <label for="bzip">Zip 1 </label>
-                            <input type="number" name="bzip" id="bzip" class="form-control" placeholder="Your ZIP1 or postal code" ng-model="checkout.address.delivery_zip1" ng-required="checkout.isNewAddress()">
-                            <label for="bzip">Zip 2 </label>
-                            <input type="number" name="bzip" id="bzip1" class="form-control" placeholder="Your ZIP2 or postal code" ng-model="checkout.address.delivery_zip2" ng-required="checkout.isNewAddress()">
-
-                            <br>
-
-                        </div>
+                        
                         <div class="clearfix"></div><br>
                         <div class="clearfix"></div>
                         <a href="" class="button">SHOW TERMS</a>
