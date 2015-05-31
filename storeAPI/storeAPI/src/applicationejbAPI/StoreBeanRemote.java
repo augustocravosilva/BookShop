@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import simple.SimpleBook;
 import simple.SimpleClient;
+import simple.SimpleOrder;
 
 /**
  *
@@ -18,7 +19,7 @@ import simple.SimpleClient;
 @Remote
 public interface StoreBeanRemote {
 
-    void orderBook(String isbn, int quantity, int clientId);
+    int orderBook(String isbn, int quantity, int clientId);
 
     int newClient(String name, String adress, String email);
 
@@ -41,4 +42,8 @@ public interface StoreBeanRemote {
     List<Client> getClients();
 
     void editClient(int clientId, String name, String adress, String email);
+
+    SimpleOrder getBookOrder(int orderid);
+
+    List<SimpleOrder> getBookOrders(int clientId);
 }

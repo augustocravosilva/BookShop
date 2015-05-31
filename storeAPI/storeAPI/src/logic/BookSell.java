@@ -6,6 +6,8 @@
 package logic;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,6 +37,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BookSell.findByQuantity", query = "SELECT b FROM BookSell b WHERE b.quantity = :quantity"),
     @NamedQuery(name = "BookSell.findByTotalprice", query = "SELECT b FROM BookSell b WHERE b.totalprice = :totalprice")})
 public class BookSell implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "SELLDATE")
+    @Temporal(TemporalType.DATE)
+    private Date selldate;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,10 +61,12 @@ public class BookSell implements Serializable {
     private Client clientid;
 
     public BookSell() {
+        selldate = Calendar.getInstance().getTime();
     }
 
     public BookSell(Integer id) {
         this.id = id;
+        selldate = Calendar.getInstance().getTime();
     }
 
     public Integer getId() {
@@ -120,6 +132,14 @@ public class BookSell implements Serializable {
     @Override
     public String toString() {
         return "applicationejb.BookSell[ id=" + id + " ]";
+    }
+
+    public Date getSelldate() {
+        return selldate;
+    }
+
+    public void setSelldate(Date selldate) {
+        this.selldate = selldate;
     }
     
 }

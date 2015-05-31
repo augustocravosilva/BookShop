@@ -6,6 +6,8 @@
 package logic;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -33,6 +38,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BookOrder.findByQuantity", query = "SELECT b FROM BookOrder b WHERE b.quantity = :quantity"),
     @NamedQuery(name = "BookOrder.findByState", query = "SELECT b FROM BookOrder b WHERE b.state = :state")})
 public class BookOrder implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ORDERDATE")
+    @Temporal(TemporalType.DATE)
+    private Date orderdate;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +62,12 @@ public class BookOrder implements Serializable {
     private Client clientid;
 
     public BookOrder() {
+        orderdate = Calendar.getInstance().getTime();
     }
 
     public BookOrder(Integer id) {
         this.id = id;
+        orderdate = Calendar.getInstance().getTime();
     }
 
     public Integer getId() {
@@ -121,6 +133,14 @@ public class BookOrder implements Serializable {
     @Override
     public String toString() {
         return "applicationejb.BookOrder[ id=" + id + " ]";
+    }
+
+    public Date getOrderdate() {
+        return orderdate;
+    }
+
+    public void setOrderdate(Date orderdate) {
+        this.orderdate = orderdate;
     }
     
 }

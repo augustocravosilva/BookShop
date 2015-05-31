@@ -42,6 +42,7 @@ import logic.BookOrder;
 import logic.BookSell;
 import simple.SimpleBook;
 import simple.SimpleClient;
+import simple.SimpleOrder;
 
 /**
  *
@@ -69,7 +70,7 @@ public class StoreBean implements StoreBeanRemote {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
     @Override
-    public void orderBook(String isbn, int quantity, int clientId) {
+    public int orderBook(String isbn, int quantity, int clientId) {
         BookOrder bo = new BookOrder();
         Client cli = em.getReference(Client.class, clientId);
         bo.setClientid(cli);
@@ -326,4 +327,34 @@ public class StoreBean implements StoreBeanRemote {
         persist(c);
         em.flush();
     }
+
+    @Override
+    public SimpleOrder getBookOrder(int orderid) {
+        BookOrder bo = em.find(BookOrder.class, orderid);
+        SimpleOrder so = new SimpleOrder();
+        so.customer = bo.getClientid().getId();
+        so.date = sdf.format(bo.getOrderdate());
+        so.product_id = bo.getIsbn().getIsbn();
+        so.quantity = bo.getQuantity();
+        so.state = bo.getState();
+        SimpleBook sb = getBook(so.product_id);
+        so.unit_price = sb.price;
+        so.total = sb.price * so.quantity;
+        return so;
+    }
+
+    @Override
+    public List<SimpleOrder> getBookOrders(int clientId) {
+        Client c = em.find(Client.class, clientId);
+        List<SimpleOrder> l = new ArrayList();
+        for(BookOrder bo : c.getBookOrderCollection())
+        {
+            l.add(getBookOrder(bo.getId()));
+        }
+        return l;
+    }
+    
+    
+    
+    
 }

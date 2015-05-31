@@ -20,7 +20,7 @@ import javax.swing.JPanel;
  * @author augusto
  */
 public class NewClientFrame extends javax.swing.JFrame {
-
+    private StoreBeanRemote storeBean = lookupStoreBeanRemote();
     private GuiFrame parent;
 
     NewClientFrame(GuiFrame aThis) {
@@ -132,7 +132,7 @@ public class NewClientFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            lookupStoreBeanRemote().newClient(nameField.getText(), adressArea.getText(), emailField.getText());
+            storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
             parent.updateClientList();
             this.dispose();
         } catch (Exception e) {
