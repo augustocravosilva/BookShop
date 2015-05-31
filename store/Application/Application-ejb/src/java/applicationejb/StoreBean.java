@@ -379,7 +379,7 @@ public class StoreBean implements StoreBeanRemote {
         persist(c);
         em.flush();
         if(pass_null)
-            sendEmail(c, "BookStore - registration", "Thank you for visiting our bookshop.\n\nYou can also buy online.\n\n"
+            sendEmail(c, "BookShop - registration", "Thank you for visiting our bookshop.\n\nYou can also buy online.\n\n"
                     + "Please use the following credentials:\n"
                     + "Email: "+c.getEmail()+"\n"
                     + "Password: "+password+"\n\n\nCheers");
