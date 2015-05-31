@@ -352,6 +352,16 @@ public class StoreBean implements StoreBeanRemote {
         }
         return l;
     }
+
+    @Override
+    public List<BookOrder> getAllOrders() {
+        return em.createNamedQuery("BookOrder.findAll", BookOrder.class).getResultList();
+    }
+
+    @Override
+    public List<BookSell> getAllSells() {
+        return em.createNamedQuery("BookSell.findAll", BookSell.class).getResultList();
+    }
     
     
     

@@ -148,7 +148,7 @@ public class NewClientFrame extends javax.swing.JFrame {
         try {
             if(sc==null)
                 storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
-            else storeBean.editClient(sc.id, sc.name, sc.address, sc.email);
+            else storeBean.editClient(sc.id, nameField.getText(), adressArea.getText(), emailField.getText());
             parent.updateClientList();
             this.dispose();
         } catch (Exception e) {

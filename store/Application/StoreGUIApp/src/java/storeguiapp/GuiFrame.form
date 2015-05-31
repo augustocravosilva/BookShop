@@ -102,6 +102,8 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="booksCombo" min="-2" pref="329" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="book_info_button" min="-2" pref="41" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="quantity_spinner" min="-2" pref="49" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -124,8 +126,9 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="booksCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="quantity_spinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="book_info_button" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="add_stock_button" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -255,11 +258,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="List Sells"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="list_sells_buttonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="list_orders_button">
       <Properties>
         <Property name="text" type="java.lang.String" value="List Orders"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="list_orders_buttonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
@@ -269,6 +278,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edit_client_buttonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="book_info_button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="I"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="book_info_buttonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

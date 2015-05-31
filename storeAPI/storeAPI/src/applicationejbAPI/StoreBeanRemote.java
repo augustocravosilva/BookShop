@@ -8,6 +8,8 @@ package applicationejbAPI;
 import logic.Client;
 import java.util.List;
 import javax.ejb.Remote;
+import logic.BookOrder;
+import logic.BookSell;
 import simple.SimpleBook;
 import simple.SimpleClient;
 import simple.SimpleOrder;
@@ -46,4 +48,8 @@ public interface StoreBeanRemote {
     SimpleOrder getBookOrder(int orderid);
 
     List<SimpleOrder> getBookOrders(int clientId);
+
+    List<BookOrder> getAllOrders();
+
+    List<BookSell> getAllSells();
 }

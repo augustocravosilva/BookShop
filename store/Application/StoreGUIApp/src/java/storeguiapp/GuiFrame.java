@@ -86,6 +86,7 @@ public class GuiFrame extends javax.swing.JFrame {
         list_orders_button = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         edit_client_button = new javax.swing.JButton();
+        book_info_button = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -169,13 +170,30 @@ public class GuiFrame extends javax.swing.JFrame {
         print_checkbox.setText("Print");
 
         list_sells_button.setText("List Sells");
+        list_sells_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                list_sells_buttonActionPerformed(evt);
+            }
+        });
 
         list_orders_button.setText("List Orders");
+        list_orders_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                list_orders_buttonActionPerformed(evt);
+            }
+        });
 
         edit_client_button.setText("Edit Client");
         edit_client_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 edit_client_buttonActionPerformed(evt);
+            }
+        });
+
+        book_info_button.setText("I");
+        book_info_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                book_info_buttonActionPerformed(evt);
             }
         });
 
@@ -226,6 +244,8 @@ public class GuiFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(booksCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(book_info_button, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -240,8 +260,9 @@ public class GuiFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(booksCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
+                    .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(book_info_button))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(add_stock_button)
                     .addComponent(jLabel3))
@@ -341,6 +362,19 @@ public class GuiFrame extends javax.swing.JFrame {
         NewClientFrame cf = new NewClientFrame(this,1);
         cf.setVisible(true);
     }//GEN-LAST:event_edit_client_buttonActionPerformed
+
+    private void list_sells_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_sells_buttonActionPerformed
+        new ListOrders(false).setVisible(true);
+    }//GEN-LAST:event_list_sells_buttonActionPerformed
+
+    private void list_orders_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_orders_buttonActionPerformed
+        new ListOrders(true).setVisible(true);
+    }//GEN-LAST:event_list_orders_buttonActionPerformed
+
+    private void book_info_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_book_info_buttonActionPerformed
+        SimpleBook sb = (SimpleBook)booksCombo.getSelectedItem();
+        JOptionPane.showMessageDialog(this, String.format(" ISBN: %s\n Title: %s\n Price: %.2f\n Stock: %d", sb.isbn,  sb.title,sb.price, sb.stock),"Book Details",JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_book_info_buttonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -379,6 +413,7 @@ public class GuiFrame extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add_stock_button;
+    private javax.swing.JButton book_info_button;
     private javax.swing.JComboBox booksCombo;
     private javax.swing.JComboBox clientCombo;
     private javax.swing.JButton edit_client_button;
