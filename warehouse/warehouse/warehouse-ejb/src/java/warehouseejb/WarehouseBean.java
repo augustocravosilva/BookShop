@@ -65,7 +65,7 @@ public class WarehouseBean implements MessageListener {
                 SimpleBook book = storeBean.getBook(isbn);
                 BookOrder order = new BookOrder(isbn, book.title, quantity, sdf.format(c.getTime()));
                 order.create();
-
+                
                 System.out.println("book - > " + order);
                 
             }

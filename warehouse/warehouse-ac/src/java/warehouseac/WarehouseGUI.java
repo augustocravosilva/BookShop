@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.swing.JOptionPane;
@@ -22,7 +21,7 @@ import warehouseinterface.IWarehouseService;
 
 public class WarehouseGUI extends javax.swing.JFrame {
     private IWarehouseService warehouseService = lookupStoreBeanRemote();
-   
+    
     
     
     private HashMap<Integer, Integer> rowToId;
@@ -52,6 +51,7 @@ public class WarehouseGUI extends javax.swing.JFrame {
         btnComplete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Warehouse");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -137,13 +137,12 @@ public class WarehouseGUI extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
         }
         else {
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String dateString = dt.format(date);
             
             for(int i: selected) {
                 IBookOrder o = warehouseService.getOrder(rowToId.get(i));
-                System.out.println(i + ": " + o.getBookName());
                 o.setStatus(CLOSED);
                 o.setDispatchDate(dateString);
                 
@@ -208,8 +207,9 @@ public class WarehouseGUI extends javax.swing.JFrame {
         
         int i = 0;
         for(IBookOrder o: orders) {
-            System.out.print(".");
-            model.addRow(new Object[]{o.getIsbn(), o.getBookName(), o.getQuantity(), o.getOrderDate(), o.getDispatchDate(), o.getStatus()});
+            model.addRow(new Object[]{o.getIsbn(), o.getBookName(), o.getQuantity(),
+                o.getOrderDate(), "null".equals(o.getDispatchDate()) ? "" : o.getDispatchDate(),
+                o.getStatus()});
             rowToId.put(i, o.getId());
             i++;
         }

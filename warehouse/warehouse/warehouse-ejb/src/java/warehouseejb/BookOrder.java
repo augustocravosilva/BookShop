@@ -228,5 +228,5 @@ public class BookOrder implements IBookOrder {
         close(conn);
         
         return bookOrder;
-    }    
+    }
 }
