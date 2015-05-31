@@ -93,10 +93,8 @@ public class StoreBean implements StoreBeanRemote {
             sendEmail(cli,"Order dispatched",String.format("Hello,\nYour order is ready.\n\nDetails:\nBook: %s\n"
                     + "Quantity: %d\nTotal: %.2f\nState: %s\n\nThank you",sb.title,bo.getQuantity(),bo.getQuantity()*sb.price,bo.getState()));
         }
-
+        return bo.getId();
     }
-    
-    
     
     @Override
     public boolean buyBook(String isbn, int quantity, int clientId, double total) {
