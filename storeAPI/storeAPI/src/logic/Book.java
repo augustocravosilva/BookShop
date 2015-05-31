@@ -6,7 +6,7 @@
 package logic;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,9 +43,9 @@ public class Book implements Serializable {
     @Column(name = "STOCK")
     private Integer stock;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "isbn")
-    private Collection<BookOrder> bookOrderCollection;
+    private List<BookOrder> bookOrderCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "isbn")
-    private Collection<BookSell> bookSellCollection;
+    private List<BookSell> bookSellCollection;
 
     public Book() {
     }
@@ -71,20 +71,20 @@ public class Book implements Serializable {
     }
 
     @XmlTransient
-    public Collection<BookOrder> getBookOrderCollection() {
+    public List<BookOrder> getBookOrderCollection() {
         return bookOrderCollection;
     }
 
-    public void setBookOrderCollection(Collection<BookOrder> bookOrderCollection) {
+    public void setBookOrderCollection(List<BookOrder> bookOrderCollection) {
         this.bookOrderCollection = bookOrderCollection;
     }
 
     @XmlTransient
-    public Collection<BookSell> getBookSellCollection() {
+    public List<BookSell> getBookSellCollection() {
         return bookSellCollection;
     }
 
-    public void setBookSellCollection(Collection<BookSell> bookSellCollection) {
+    public void setBookSellCollection(List<BookSell> bookSellCollection) {
         this.bookSellCollection = bookSellCollection;
     }
 

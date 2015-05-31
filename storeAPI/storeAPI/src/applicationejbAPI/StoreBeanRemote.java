@@ -17,7 +17,7 @@ import simple.SimpleBook;
 @Remote
 public interface StoreBeanRemote {
 
-    void orderBook(String isbn, int quatity, int clientId);
+    void orderBook(String isbn, int quantity, int clientId);
 
     String businessMethod();
 
@@ -32,6 +32,12 @@ public interface StoreBeanRemote {
     SimpleBook getBook(String isbn);
 
     String getGoogleBookAsString(String isbn);
+
+    boolean buyBook(String isbn, int quantity, int clientId, double total);
+
+    void receiveStock(String isbn, int quantity);
+
+    void notifyOrderAboutToShip(String isbn, int quantity);
     
     
 }

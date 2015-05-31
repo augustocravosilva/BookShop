@@ -12,6 +12,8 @@ import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -19,13 +21,11 @@ import javax.naming.NamingException;
  */
 public class NewClientFrame extends javax.swing.JFrame {
 
-    
+    private GuiFrame parent;
 
-    /**
-     * Creates new form NewClientFrame
-     */
-    public NewClientFrame() {
+    NewClientFrame(GuiFrame aThis) {
         initComponents();
+        parent = aThis;
     }
 
     /**
@@ -133,9 +133,11 @@ public class NewClientFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             lookupStoreBeanRemote().newClient(nameField.getText(), adressArea.getText(), emailField.getText());
+            parent.updateClientList();
             this.dispose();
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error creating a new client. Empty field or invalid email?", "Error", JOptionPane.ERROR_MESSAGE);
+            //e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

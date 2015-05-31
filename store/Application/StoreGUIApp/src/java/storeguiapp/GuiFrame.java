@@ -7,14 +7,20 @@ package storeguiapp;
 
 import logic.Client;
 import applicationejbAPI.StoreBeanRemote;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.swing.JOptionPane;
+import simple.SimpleBook;
 
 /**
  *
@@ -23,21 +29,35 @@ import javax.naming.NamingException;
 public class GuiFrame extends javax.swing.JFrame {
     private StoreBeanRemote storeBean = lookupStoreBeanRemote();
     
+    private MyPrinter printer = new MyPrinter();
+    
     /**
      * Creates new form GuiFrame
      */
     public GuiFrame() {
         initComponents();
         updateClientList();
+        updateBookList(false);
+        quantity_spinner.setValue(1);
+        updateButtons();
     }
     
-    private void updateClientList() {
-        List<Client> clients = storeBean.getClients();
-        ArrayList<String> clientNames = new ArrayList<String>();
+    private List<Client> clients;
+    void updateClientList() {
+        clients = storeBean.getClients();
+        ArrayList<String> clientNames = new ArrayList();
         for (Client client : clients) {
             clientNames.add(client.getFullname());
         }
         clientCombo.setModel(new javax.swing.DefaultComboBoxModel(clientNames.toArray()));
+    }
+    
+    private void updateBookList(boolean keepSelectedItem){
+        int pos = booksCombo.getSelectedIndex();
+        List<SimpleBook> books = storeBean.getBooks();
+        booksCombo.setModel(new javax.swing.DefaultComboBoxModel(books.toArray()));
+        if(keepSelectedItem)
+            booksCombo.setSelectedIndex(pos);
     }
     
     /**
@@ -50,16 +70,18 @@ public class GuiFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jInternalFrame1 = new javax.swing.JInternalFrame();
-        jComboBox1 = new javax.swing.JComboBox();
-        jSpinner1 = new javax.swing.JSpinner();
-        jButton1 = new javax.swing.JButton();
+        booksCombo = new javax.swing.JComboBox();
+        quantity_spinner = new javax.swing.JSpinner();
+        sell_button = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         clientCombo = new javax.swing.JComboBox();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        add_stock_button = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        order_button = new javax.swing.JButton();
+        print_checkbox = new javax.swing.JCheckBox();
 
         jInternalFrame1.setVisible(true);
 
@@ -77,15 +99,27 @@ public class GuiFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Store");
         setBackground(new java.awt.Color(153, 204, 255));
+        setName("store"); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        booksCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        booksCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                booksComboActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Buy Or Order");
+        quantity_spinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                quantity_spinnerStateChanged(evt);
+            }
+        });
+
+        sell_button.setText("Sell");
+        sell_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sell_buttonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Book");
 
@@ -105,21 +139,30 @@ public class GuiFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("R");
+        jButton3.setText("Refresh");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Add to Stock");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        add_stock_button.setText("Add to Stock");
+        add_stock_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                add_stock_buttonActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Incoming package");
+
+        order_button.setText("Order");
+        order_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                order_buttonActionPerformed(evt);
+            }
+        });
+
+        print_checkbox.setText("Print");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,77 +172,136 @@ public class GuiFrame extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 14, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(add_stock_button)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(clientCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2))
-                            .addComponent(jButton5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(clientCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)))
-                        .addGap(56, 56, 56))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(print_checkbox))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(sell_button)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(order_button)))))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel1))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(booksCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(booksCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantity_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
+                    .addComponent(add_stock_button)
                     .addComponent(jLabel3))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clientCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel2))
+                    .addComponent(sell_button)
+                    .addComponent(jLabel2)
+                    .addComponent(order_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(print_checkbox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void booksComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_booksComboActionPerformed
+        updateButtons();
+    }//GEN-LAST:event_booksComboActionPerformed
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new NewClientFrame().setVisible(true);
+        NewClientFrame cf = new NewClientFrame(this);
+        cf.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         updateClientList();
+        updateBookList(false);
+        updateButtons();
     }//GEN-LAST:event_jButton3ActionPerformed
     
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void add_stock_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_stock_buttonActionPerformed
+        storeBean.receiveStock(((SimpleBook)booksCombo.getSelectedItem()).isbn, (int)quantity_spinner.getValue());
+        updateBookList(true);
+    }//GEN-LAST:event_add_stock_buttonActionPerformed
     
     private void clientComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientComboActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_clientComboActionPerformed
+
+    private void sell_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sell_buttonActionPerformed
+        SimpleBook b = (SimpleBook) booksCombo.getSelectedItem();
+        int quantity = (Integer) quantity_spinner.getValue();
+        Client c = clients.get(clientCombo.getSelectedIndex());
+        boolean result = storeBean.buyBook(b.isbn,quantity, c.getId(), b.price*quantity);
+        if(result)
+        {
+            if(print_checkbox.isSelected())
+                printer.print(String.format("RECEIPT\n\n\nClient: %s\n%s\n%s\n\nBook: %s\nQuantity: %d\nTotal: %.2f\n\nThank you",c.getFullname(),c.getAdress(),c.getEmail(),b.title,quantity,b.price*quantity));
+            else JOptionPane.showMessageDialog(this,  "Sold successfully.", "Information", JOptionPane.INFORMATION_MESSAGE);  
+        }else{
+            JOptionPane.showMessageDialog(this, "There was a problem processing this order. Try refreshing.", "Error", JOptionPane.ERROR_MESSAGE);  
+        }
+        updateBookList(true);
+    }//GEN-LAST:event_sell_buttonActionPerformed
+
+    private void quantity_spinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_quantity_spinnerStateChanged
+        if((Integer) quantity_spinner.getValue() < 1)
+        {
+            quantity_spinner.setValue(1);
+        }
+        updateButtons();
+           
+    }//GEN-LAST:event_quantity_spinnerStateChanged
+
+    private void updateButtons() {
+        if(((SimpleBook)booksCombo.getSelectedItem()).stock < (int)quantity_spinner.getValue())
+        {
+            order_button.setEnabled(true);
+            sell_button.setEnabled(false);
+        }else{
+            order_button.setEnabled(false);
+            sell_button.setEnabled(true);
+        }
+    }
+
+    private void order_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_order_buttonActionPerformed
+        SimpleBook b = (SimpleBook) booksCombo.getSelectedItem();
+        int quantity = (Integer) quantity_spinner.getValue();
+        Client c = clients.get(clientCombo.getSelectedIndex());
+        storeBean.orderBook(b.isbn,quantity, c.getId());
+        JOptionPane.showMessageDialog(this,  "Ordered successfully.", "Information", JOptionPane.INFORMATION_MESSAGE);  
+    }//GEN-LAST:event_order_buttonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -237,18 +339,21 @@ public class GuiFrame extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add_stock_button;
+    private javax.swing.JComboBox booksCombo;
     private javax.swing.JComboBox clientCombo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JButton order_button;
+    private javax.swing.JCheckBox print_checkbox;
+    private javax.swing.JSpinner quantity_spinner;
+    private javax.swing.JButton sell_button;
     // End of variables declaration//GEN-END:variables
+    
     
     private StoreBeanRemote lookupStoreBeanRemote() {
         try {
@@ -259,5 +364,49 @@ public class GuiFrame extends javax.swing.JFrame {
             throw new RuntimeException(ne);
         }
     }
+    
+    public class MyPrinter implements Printable {
+ 
+        private String text;
+        
+        public int print(Graphics g, PageFormat pf, int page) throws
+                                                            PrinterException {
+
+            if (page > 0) { /* We have only one page, and 'page' is zero-based */
+                return NO_SUCH_PAGE;
+            }
+
+            /* User (0,0) is typically outside the imageable area, so we must
+             * translate by the X and Y values in the PageFormat to avoid clipping
+             */
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.translate(pf.getImageableX(), pf.getImageableY());
+
+            /* Now we perform our rendering */
+            String lines[] = text.split("\n");
+            for(int i = 0; i < lines.length; i++)
+                g.drawString(lines[i], 50, 50+i*20);
+
+            /* tell the caller that this page is part of the printed document */
+            return PAGE_EXISTS;
+        }
+        
+        public void print(String text)
+        {
+            this.text = text;
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintable(this);
+            boolean ok = job.printDialog();
+            if (ok) {
+                try {
+                     job.print();
+                } catch (PrinterException ex) {
+                 /* The job did not successfully complete */
+                }
+            }
+        }
+    
+    }
+    
     
 }

@@ -16,11 +16,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import logic.Client;
 import logic.Book;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -31,6 +36,8 @@ import javax.jms.JMSContext;
 import javax.jms.Queue;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import logic.BookOrder;
+import logic.BookSell;
 import simple.SimpleBook;
 
 /**
@@ -56,11 +63,45 @@ public class StoreBean implements StoreBeanRemote {
     @PersistenceContext(unitName = "Application-ejbPU")
     private EntityManager em;
     
-
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
     @Override
-    public void orderBook(String isbn, int quatity, int clientId) {
-        System.out.println("It was ordered.");
+    public void orderBook(String isbn, int quantity, int clientId) {
+        BookOrder bo = new BookOrder();
+        bo.setClientid(em.getReference(Client.class, clientId));
+        Book b = em.getReference(Book.class, isbn);
+        bo.setIsbn(b);
+        bo.setQuantity(quantity);
+        if(quantity > b.getStock())
+        {
+            bo.setState(WAITING_EXPEDITION);
+            sendJMSMessageToEAppQueue(isbn+":"+10*quantity); //warehouse use getBook(isbn) to get more details
+        } else{
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            bo.setState("dispatched at " + sdf.format(c.getTime()));
+        }
+        persist(bo);
+        em.flush();
+    }
+    
+    @Override
+    public boolean buyBook(String isbn, int quantity, int clientId, double total) {
+        Book b = em.getReference(Book.class, isbn);
+        if(b.getStock() < quantity){
+            return false;
+        }
         
+        BookSell bs = new BookSell();
+        bs.setClientid(em.getReference(Client.class, clientId));
+        bs.setIsbn(b);
+        bs.setQuantity(quantity);
+        bs.setTotalprice(total);
+        persist(bs);
+        b.setStock(b.getStock()-quantity);
+        persist(b);
+        em.flush();
+        return true;
     }
     
     @Override
@@ -71,6 +112,7 @@ public class StoreBean implements StoreBeanRemote {
         c.setAdress(adress);
         c.setEmail(email);
         persist(c);
+        em.flush();
     }
     
     
@@ -195,7 +237,49 @@ public class StoreBean implements StoreBeanRemote {
     public String getGoogleBookAsString(String isbn) {
         return callGoogleAPI(isbn).toString();
     }
-    
-    
+
+    @Override
+    public void receiveStock(String isbn, int quantity) {
+        Book b = em.getReference(Book.class,isbn);
+        int left_quantity = quantity + b.getStock(); //update all orders than can be satisfied with new stock
+        List<BookOrder> bos = b.getBookOrderCollection();
+        for(BookOrder bo : bos)
+        {
+            if(!bo.getState().startsWith(DISPATCHED_AT) && bo.getQuantity() <= left_quantity)
+            {
+                //order is ready
+                //TODO send email
+                bo.setState(DISPATCHED_AT + sdf.format(Calendar.getInstance().getTime()));
+                left_quantity -= bo.getQuantity();
+                System.out.println("--> Quanity is now " + left_quantity);
+                persist(bo);
+            }
+        }//the ones left are stored in the shop
+        b.setStock(left_quantity);
+        persist(b);
+        em.flush();
+    }
+    private static final String DISPATCHED_AT = "dispatched at ";
+    private static final String DISPATCH_WILL_OCCUR_AT = "dispatch will occur at ";
+    private static final String WAITING_EXPEDITION = "waiting expedition";
+
+    @Override
+    public void notifyOrderAboutToShip(String isbn, int quantity) { //notifies the one that can be satisfied only with new stock
+        Book b = em.getReference(Book.class,isbn);
+        int left_quantity = quantity;
+        List<BookOrder> bos = b.getBookOrderCollection();
+        for(BookOrder bo : bos)
+        {
+            if(bo.getState().startsWith(WAITING_EXPEDITION) && bo.getQuantity() <= left_quantity)
+            {
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.DAY_OF_MONTH, 2);
+                bo.setState(DISPATCH_WILL_OCCUR_AT + sdf.format(c.getTime()));
+                left_quantity -= bo.getQuantity();
+                persist(bo);
+            }
+        }
+        em.flush();
+    }
     
 }

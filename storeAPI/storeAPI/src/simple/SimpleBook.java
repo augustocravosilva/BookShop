@@ -23,5 +23,16 @@ public class SimpleBook implements Serializable{
         price = 0.0;
     }
     
+    @Override
+    public String toString()
+    {
+        String str;
+        final int str_len = 35;
+        if(this.title.length() > str_len)
+            str = this.title.substring(0, str_len) + "...";
+        else str = this.title;
+        return str + " // stock: "+this.stock;
+    }
+    
     
 }
