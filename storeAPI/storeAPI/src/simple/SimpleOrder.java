@@ -20,4 +20,5 @@ public class SimpleOrder implements Serializable{
     public String product_id;
     public double unit_price;
     public int quantity;
+    public int id;
 }

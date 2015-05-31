@@ -87,6 +87,8 @@ public class StoreBean implements StoreBeanRemote {
             c.add(Calendar.DAY_OF_MONTH, 1);
             bo.setState(DISPATCHED_AT + sdf.format(c.getTime()));
             persist(bo);
+            b.setStock(b.getStock() - quantity);
+            persist(b);
             em.flush();
             SimpleBook sb = getSimpleBook(b);
             sendEmail(cli, "Order dispatched", String.format("Hello,\nYour order is ready.\n\nDetails:\nBook: %s\n"
@@ -339,6 +341,7 @@ public class StoreBean implements StoreBeanRemote {
         SimpleBook sb = getBook(so.product_id);
         so.unit_price = sb.price;
         so.total = sb.price * so.quantity;
+        so.id = bo.getId();
         return so;
     }
 
