@@ -22,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
 import simple.SimpleOrder;
 
 /**
@@ -97,17 +98,27 @@ public class Order {
         //{"customer":"C001","lines":[{"product_id":"A002.BLACK.13","quantity":1}]}
 
         if (!json.containsKey("customer") || !json.containsKey("lines")) {
-            return "{\"error\": \"wrong parameters\"}";
+            throw new WebApplicationException("{\"error\": \"wrong parameters\"}");
         }
         
-        for(JsonValue j : json.getJsonArray("lines")){
-            JsonObject o = (JsonObject) j;
-            storeBean.orderBook(o.getString("product_id"), o.getInt("quantity"), Integer.parseInt(json.getString("customer")));
+        int ids[] = new int[json.getJsonArray("lines").size()];
+        
+        StringBuilder out = new StringBuilder();
+        out.append("[");
+        for(int i = 0; i < json.getJsonArray("lines").size(); i++)
+        {
+            JsonObject o = (JsonObject)json.getJsonArray("lines").get(i);
+            int id = storeBean.orderBook(o.getString("product_id"), o.getInt("quantity"), Integer.parseInt(json.getString("customer")));
+            out.append(id);
+            if(i < json.getJsonArray("lines").size()-1)
+                out.append(",");
         }
+        out.append("]");
         
         //for each line on order create a separate order
         //return orders ID
-        return "[1,2,3]";
+        //return "[1,2,3]";
+        return out.toString();
     }
     
      private StoreBeanRemote lookupStoreBeanRemote() {
