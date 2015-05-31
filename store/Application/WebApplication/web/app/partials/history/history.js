@@ -22,9 +22,9 @@ angular.module('myApp.history', ['ngRoute'])
         $scope.refreshOrders = function () {
             $http.get('http://localhost:8080/WebApplication/webresources/orders/client/' + Auth.getCurrentUser().id).success(function (res) {
                 $log.log("Novas orders: ");
-                $log.log(res);
+                $log.log(JSON.stringify(res));
 
-                $scope.orders = res['orders'];
+                $scope.orders = res;
             }).error(function (error) {
                 $log.error(error);
             });
