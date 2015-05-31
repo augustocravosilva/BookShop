@@ -6,6 +6,7 @@
 package api;
 
 import applicationejbAPI.StoreBeanRemote;
+import com.google.gson.Gson;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
+import simple.SimpleBook;
 import simple.SimpleOrder;
 
 /**
@@ -59,10 +61,19 @@ public class Order {
     @GET
     @Path("{id}")
     @Produces("application/json")
-    public SimpleOrder getOrder(@PathParam("id") String id) {
+    public String getOrder(@PathParam("id") String id) {
         //TODO GET the order with that id
         System.out.println("Returning order w/ id: " + id);
-        return storeBean.getBookOrder(Integer.parseInt(id));
+        SimpleOrder order = storeBean.getBookOrder(Integer.parseInt(id));
+        Gson g = new Gson();
+        String jsonString = g.toJson(order);
+        SimpleBook book = storeBean.getBook(order.product_id);
+        jsonString = jsonString.substring(0, jsonString.length() - 1);
+        jsonString += ",\"title\":" + "\"" + book.title + "\"}";
+        
+        System.out.println("************" + jsonString);
+        return jsonString;
+        
         //return "{\"id\":\"520\",\"customer\":\"C001\",\"date\":\"2014-11-28T00:00:00\",\"total\":35.50,\"state\":\"P\",\"lines\":[{\"product_id\":\"A001\",\"unit_price\":79.95,\"quatity\":10.0,\"total\":983.39,\"color\":\"BLACK\",\"size\":\"15\"}],\"delivery_address\":\"Rua das Flores N 123\",\"delivery_city\":\"Porto\",\"delivery_zip\":\"4100-000\"}";
     }
     
