@@ -9,7 +9,6 @@ import applicationejbAPI.StoreBeanRemote;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import static com.google.gson.internal.bind.TypeAdapters.URL;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,19 +20,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import logic.Client;
 import logic.Book;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
 import javax.jms.Queue;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import logic.BookOrder;
@@ -68,21 +69,28 @@ public class StoreBean implements StoreBeanRemote {
     @Override
     public void orderBook(String isbn, int quantity, int clientId) {
         BookOrder bo = new BookOrder();
-        bo.setClientid(em.getReference(Client.class, clientId));
+        Client cli = em.getReference(Client.class, clientId);
+        bo.setClientid(cli);
         Book b = em.getReference(Book.class, isbn);
         bo.setIsbn(b);
         bo.setQuantity(quantity);
         if(quantity > b.getStock())
         {
             bo.setState(WAITING_EXPEDITION);
+            persist(bo);
+            em.flush();
             sendJMSMessageToEAppQueue(isbn+":"+10*quantity); //warehouse use getBook(isbn) to get more details
         } else{
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_MONTH, 1);
-            bo.setState("dispatched at " + sdf.format(c.getTime()));
+            bo.setState(DISPATCHED_AT + sdf.format(c.getTime()));
+            persist(bo);
+            em.flush();
+            SimpleBook sb = getSimpleBook(b);
+            sendEmail(cli,"Order dispatched",String.format("Hello,\nYour order is ready.\n\nDetails:\nBook: %s\n"
+                    + "Quantity: %d\nTotal: %.2f\nState: %s\n\nThank you",sb.title,bo.getQuantity(),bo.getQuantity()*sb.price,bo.getState()));
         }
-        persist(bo);
-        em.flush();
+
     }
     
     @Override
@@ -93,7 +101,8 @@ public class StoreBean implements StoreBeanRemote {
         }
         
         BookSell bs = new BookSell();
-        bs.setClientid(em.getReference(Client.class, clientId));
+        Client c = em.getReference(Client.class, clientId);
+        bs.setClientid(c);
         bs.setIsbn(b);
         bs.setQuantity(quantity);
         bs.setTotalprice(total);
@@ -241,6 +250,7 @@ public class StoreBean implements StoreBeanRemote {
     @Override
     public void receiveStock(String isbn, int quantity) {
         Book b = em.getReference(Book.class,isbn);
+        SimpleBook sb = getSimpleBook(b);
         int left_quantity = quantity + b.getStock(); //update all orders than can be satisfied with new stock
         List<BookOrder> bos = b.getBookOrderCollection();
         for(BookOrder bo : bos)
@@ -248,11 +258,13 @@ public class StoreBean implements StoreBeanRemote {
             if(!bo.getState().startsWith(DISPATCHED_AT) && bo.getQuantity() <= left_quantity)
             {
                 //order is ready
-                //TODO send email
                 bo.setState(DISPATCHED_AT + sdf.format(Calendar.getInstance().getTime()));
                 left_quantity -= bo.getQuantity();
                 System.out.println("--> Quanity is now " + left_quantity);
                 persist(bo);
+                Client cli = bo.getClientid();
+                sendEmail(cli,"Order dispatched",String.format("Hello,\nYour order is ready.\n\nDetails:\nBook: %s\n"
+                    + "Quantity: %d\nTotal: %.2f\nState: %s\n\nThank you",sb.title,bo.getQuantity(),bo.getQuantity()*sb.price,bo.getState()));
             }
         }//the ones left are stored in the shop
         b.setStock(left_quantity);
@@ -281,5 +293,42 @@ public class StoreBean implements StoreBeanRemote {
         }
         em.flush();
     }
+   
+    /*
+    * To use email you must be connect to feup network
+    */
     
+    private boolean sendEmail(Client to, String subject, String body)
+    {
+        final int port = 465;
+        final String host = "smtp.fe.up.pt";
+        final String from = "bookshop@fe.up.pt";
+        final String from_name = "BookShop";
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.ssl.enable", true);
+        props.put("mail.smtp.auth", false);
+        
+        Session session = Session.getInstance(props);
+        session.setDebug(true);
+        
+        MimeMessage message = new MimeMessage(session);
+        
+        try {
+            message.setFrom(new InternetAddress(from,from_name));
+            InternetAddress[] address = {new InternetAddress(to.getEmail(),to.getFullname())};
+            message.setRecipients(Message.RecipientType.TO, address);
+            message.setSubject(subject);
+            message.setSentDate(new Date());
+            message.setText(body);
+            Transport.send(message);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
 }
