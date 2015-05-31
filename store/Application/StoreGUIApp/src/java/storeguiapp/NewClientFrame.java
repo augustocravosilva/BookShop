@@ -6,6 +6,7 @@
 package storeguiapp;
 
 import applicationejbAPI.StoreBeanRemote;
+import java.awt.HeadlessException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -14,18 +15,31 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import simple.SimpleClient;
 
 /**
  *
  * @author augusto
  */
 public class NewClientFrame extends javax.swing.JFrame {
-    private StoreBeanRemote storeBean = lookupStoreBeanRemote();
+    private StoreBeanRemote storeBean;
     private GuiFrame parent;
+    private SimpleClient sc;
 
     NewClientFrame(GuiFrame aThis) {
         initComponents();
+        storeBean = lookupStoreBeanRemote();
         parent = aThis;
+    }
+
+    public NewClientFrame(GuiFrame aThis, int clientId) {
+        initComponents();
+        parent = aThis;
+        storeBean = lookupStoreBeanRemote();
+        sc = storeBean.getClient(clientId);
+        adressArea.setText(sc.address);
+        emailField.setText(sc.email);
+        nameField.setText(sc.name);
     }
 
     /**
@@ -48,7 +62,7 @@ public class NewClientFrame extends javax.swing.JFrame {
         emailField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("New Client");
+        setTitle("Client Window");
         setAlwaysOnTop(true);
 
         jButton1.setText("Save");
@@ -132,7 +146,9 @@ public class NewClientFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
+            if(sc==null)
+                storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
+            else storeBean.editClient(sc.id, sc.name, sc.address, sc.email);
             parent.updateClientList();
             this.dispose();
         } catch (Exception e) {

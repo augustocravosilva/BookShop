@@ -5,13 +5,15 @@
  */
 package simple;
 
+import java.io.Serializable;
+
 /**
  *
  * @author augusto
  */
-public class SimpleClient {
+public class SimpleClient implements Serializable{
     public String name;
     public String address;
     public String email;
-    
+    public int id;
 }

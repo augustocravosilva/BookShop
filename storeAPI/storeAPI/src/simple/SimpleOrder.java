@@ -5,11 +5,13 @@
  */
 package simple;
 
+import java.io.Serializable;
+
 /**
  *
  * @author augusto
  */
-public class SimpleOrder {
+public class SimpleOrder implements Serializable{
     //public int id;
     public int customer;
     public String date;
