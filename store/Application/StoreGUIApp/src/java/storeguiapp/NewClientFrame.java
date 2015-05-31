@@ -146,9 +146,10 @@ public class NewClientFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            if(sc==null)
-                storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
-            else storeBean.editClient(sc.id, nameField.getText(), adressArea.getText(), emailField.getText());
+            if(sc==null){
+                int res = storeBean.newClient(nameField.getText(), adressArea.getText(), emailField.getText());
+                storeBean.changeClientPassword(null, res);
+            } else storeBean.editClient(sc.id, nameField.getText(), adressArea.getText(), emailField.getText());
             parent.updateClientList();
             this.dispose();
         } catch (Exception e) {

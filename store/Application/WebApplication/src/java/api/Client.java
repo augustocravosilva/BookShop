@@ -92,6 +92,10 @@ public class Client {
         
         storeBean.editClient(Integer.parseInt(id), cs.name, cs.address, cs.email);
         
+        if(json.containsKey("password") && json.containsKey("password2"))
+            if(json.getString("password").equals(json.getString("password2")))
+                storeBean.changeClientPassword(json.getString("password"), Integer.parseInt(id));
+        
         return cs;
     }
     
@@ -142,7 +146,9 @@ public class Client {
         
         //TODO adress
         int res = storeBean.newClient(json.getString("name"), json.getString("city"), json.getString("email"));
-
+        
+        storeBean.changeClientPassword(json.getString("password"), res);
+        
         //return id;
         return "{\"id\":"+ res +"}";
     }

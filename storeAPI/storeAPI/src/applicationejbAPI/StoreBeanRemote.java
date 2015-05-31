@@ -52,4 +52,6 @@ public interface StoreBeanRemote {
     List<BookOrder> getAllOrders();
 
     List<BookSell> getAllSells();
+
+    void changeClientPassword(String password, int clientId);
 }

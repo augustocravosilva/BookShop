@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,6 +25,7 @@ import logic.Book;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -304,7 +306,7 @@ public class StoreBean implements StoreBeanRemote {
     public int validateClient(String email, String password) {
         try {
             Client c = em.createNamedQuery("Client.findByEmail", Client.class).setParameter("email", email).getSingleResult();
-            if (password.equals("TDIN")) {
+            if (c.getPassword() != null && password.equals(c.getPassword())) {
                 return c.getId();
             } else {
                 return -1;
@@ -314,6 +316,8 @@ public class StoreBean implements StoreBeanRemote {
         }
     }
 
+    
+    
     @Override
     public List<Client> getClients() {
         return em.createNamedQuery("Client.findAll").getResultList();
@@ -363,6 +367,22 @@ public class StoreBean implements StoreBeanRemote {
     @Override
     public List<BookSell> getAllSells() {
         return em.createNamedQuery("BookSell.findAll", BookSell.class).getResultList();
+    }
+
+    @Override
+    public void changeClientPassword(String password, int clientId) {
+        boolean pass_null = password==null;
+        if(pass_null)
+            password = new BigInteger(130, new Random()).toString(32);
+        Client c = em.find(Client.class, clientId);
+        c.setPassword(password);
+        persist(c);
+        em.flush();
+        if(pass_null)
+            sendEmail(c, "BookStore - registration", "Thank you for visiting our bookshop.\n\nYou can also buy online.\n\n"
+                    + "Please use the following credentials:\n"
+                    + "Email: "+c.getEmail()+"\n"
+                    + "Password: "+password+"\n\n\nCheers");
     }
 
 }

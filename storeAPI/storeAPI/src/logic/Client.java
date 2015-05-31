@@ -38,6 +38,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Client.findByAdress", query = "SELECT c FROM Client c WHERE c.adress = :adress"),
     @NamedQuery(name = "Client.findByEmail", query = "SELECT c FROM Client c WHERE c.email = :email")})
 public class Client implements Serializable {
+    @Size(max = 100)
+    @Column(name = "PASSWORD")
+    private String password;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -149,6 +152,14 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "applicationejb.Client[ id=" + id + " ]";
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 }
