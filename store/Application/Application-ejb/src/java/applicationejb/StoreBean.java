@@ -296,6 +296,7 @@ public class StoreBean implements StoreBeanRemote {
         sc.address = c.getAdress();
         sc.name = c.getFullname();
         sc.email = c.getEmail();
+        sc.id = c.getId();
         return sc;
     }
 
