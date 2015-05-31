@@ -9,6 +9,7 @@ import logic.Client;
 import java.util.List;
 import javax.ejb.Remote;
 import simple.SimpleBook;
+import simple.SimpleClient;
 
 /**
  *
@@ -19,13 +20,7 @@ public interface StoreBeanRemote {
 
     void orderBook(String isbn, int quantity, int clientId);
 
-    String businessMethod();
-
-    void newClient(String name, String adress, String email);
-
-    List<Client> getClients();
-
-    String test();
+    int newClient(String name, String adress, String email);
 
     List<SimpleBook> getBooks();
 
@@ -38,6 +33,12 @@ public interface StoreBeanRemote {
     void receiveStock(String isbn, int quantity);
 
     void notifyOrderAboutToShip(String isbn, int quantity);
+
+    SimpleClient getClient(int clientId);
+
+    int validateClient(String email, String password);
     
-    
+    List<Client> getClients();
+
+    void editClient(int clientId, String name, String adress, String email);
 }

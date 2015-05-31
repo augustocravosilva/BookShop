@@ -36,10 +36,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import logic.BookOrder;
 import logic.BookSell;
 import simple.SimpleBook;
+import simple.SimpleClient;
 
 /**
  *
@@ -93,6 +95,8 @@ public class StoreBean implements StoreBeanRemote {
 
     }
     
+    
+    
     @Override
     public boolean buyBook(String isbn, int quantity, int clientId, double total) {
         Book b = em.getReference(Book.class, isbn);
@@ -114,7 +118,7 @@ public class StoreBean implements StoreBeanRemote {
     }
     
     @Override
-    public void newClient(String name, String adress, String email)
+    public int newClient(String name, String adress, String email)
     {
         Client c = new Client();
         c.setFullname(name);
@@ -122,39 +126,10 @@ public class StoreBean implements StoreBeanRemote {
         c.setEmail(email);
         persist(c);
         em.flush();
+        return c.getId();
     }
     
     
-    @Override
-    public List<Client> getClients() {
-        return em.createNamedQuery("Client.findAll").getResultList();
-    }
-    
-    
-    //nova ordem de compra
-
-    //public void orderBook(String isbn, int quantity, int clientId) {
-    //}
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-    
-    //livros - titulos, preco, existencias loja e armazem
-    
-    
-    
-    //venda
-    
-    //receipt
-    
-    //send email
-    
-    //request warehouse for 10x quantity
-    
-    //orderbeingshipped (Warehouse->Store)
-    
-    //update store stock
-
     
     private JsonObject callGoogleAPI(String isbn)
     {
@@ -178,16 +153,6 @@ public class StoreBean implements StoreBeanRemote {
             }
         return null;
     }
-    
-    //REST test
-    @Override
-    public String businessMethod() {
-
-        return "";
-
-       // sendJMSMessageToEAppQueue("lalala");
-       
-    }
 
     private void persist(Object object) {
         em.persist(object);
@@ -196,13 +161,6 @@ public class StoreBean implements StoreBeanRemote {
     private void sendJMSMessageToEAppQueue(String messageData) {
         context.createProducer().send(eAppQueue, messageData);
     }
-
-    @Override
-    public String test() {
-        return ((Client)(em.createNamedQuery("Client.findAll").getResultList().get(0))).getFullname();
-    }
-
-    
     
     @Override
     public List<SimpleBook> getBooks() {
@@ -330,5 +288,42 @@ public class StoreBean implements StoreBeanRemote {
         }
         
         return false;
+    }
+
+    @Override
+    public SimpleClient getClient(int clientId) {
+        Client c = em.find(Client.class, clientId);
+        SimpleClient sc = new SimpleClient();
+        sc.address = c.getAdress();
+        sc.name = c.getFullname();
+        sc.email = c.getEmail();
+        return sc;
+    }
+
+    @Override
+    public int validateClient(String email, String password) {
+        try{
+            Client c = em.createNamedQuery("Client.findByEmail", Client.class).setParameter("email", email).getSingleResult();
+            if(password.equals("TDIN"))
+                return c.getId();
+            else return -1;
+        }catch(NoResultException e){
+            return -1;
+        }
+    }
+    
+    @Override
+    public List<Client> getClients() {
+        return em.createNamedQuery("Client.findAll").getResultList();
+    }
+
+    @Override
+    public void editClient(int clientId, String name, String adress, String email) {
+        Client c = em.find(Client.class, clientId);
+        c.setFullname(name);
+        c.setAdress(adress);
+        c.setEmail(email);
+        persist(c);
+        em.flush();
     }
 }
