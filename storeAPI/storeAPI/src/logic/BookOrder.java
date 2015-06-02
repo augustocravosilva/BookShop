@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BookOrder.findAll", query = "SELECT b FROM BookOrder b"),
     @NamedQuery(name = "BookOrder.findById", query = "SELECT b FROM BookOrder b WHERE b.id = :id"),
     @NamedQuery(name = "BookOrder.findByQuantity", query = "SELECT b FROM BookOrder b WHERE b.quantity = :quantity"),
+    @NamedQuery(name = "BookOrder.findByClient", query = "SELECT b FROM BookOrder b WHERE b.clientid = :client"),
     @NamedQuery(name = "BookOrder.findByState", query = "SELECT b FROM BookOrder b WHERE b.state = :state")})
 public class BookOrder implements Serializable {
     @Basic(optional = false)

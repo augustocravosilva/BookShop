@@ -86,9 +86,10 @@ public class Order {
     @Path("client/{id}")
     @Produces("application/json")
     public List<SimpleOrder> getClientOrders(@PathParam("id") String id) {
-        //TODO GET the orders from this client
-        System.out.println("Returning orders from client w/ id: " + id);
-        return storeBean.getBookOrders(Integer.parseInt(id));
+        List<SimpleOrder> orders = storeBean.getBookOrders(Integer.parseInt(id));
+        System.out.println("Returning orders from client w/ id: " + id + " has " + orders.size() + " orders!");
+        
+        return orders;
         //return "{\"orders\":[{\"id\":1,\"date\":\"2014-11-28T00:00:00\",\"total\":799.5,\"state\":\"Pending\"}]}";
     }
     

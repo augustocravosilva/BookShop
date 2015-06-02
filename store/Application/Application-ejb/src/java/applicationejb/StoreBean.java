@@ -9,6 +9,11 @@ import applicationejbAPI.StoreBeanRemote;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -129,29 +138,74 @@ public class StoreBean implements StoreBeanRemote {
         em.flush();
         return c.getId();
     }
+    
+    private InputStream getFromCache(String isbn)
+    {
+        final File folder = new File("./");
+        File[] fs = folder.listFiles(new FilenameFilter() {
 
-    private JsonObject callGoogleAPI(String isbn) {
-        String sURL = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
-        System.out.println(sURL);
-        URL url;
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.startsWith(isbn);
+            }
+        });
+        if(fs != null && fs.length > 0)
+            try {
+                return new FileInputStream(fs[0]);
+        } catch (FileNotFoundException ex) {
+            return null;
+        }
+        return null;
+    }
+
+    private void storeInCache(InputStream i, String isbn){
         try {
-            url = new URL(sURL);
-            URLConnection u = url.openConnection();
-            u.setConnectTimeout(1000);
-            u.setReadTimeout(1000);
-            HttpURLConnection request = (HttpURLConnection) u;
-            System.out.println("calling google...");
-            request.connect();
-            System.out.println("finished calling google");
-            // Convert to a JSON object to print data
+            i.reset();
+        } catch (IOException ex) {
+            Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        final File file = new File(isbn+".json");
+        try {
+            file.createNewFile();
+            Files.copy(i,file.toPath());
+        } catch (Exception ex) {
+            Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private JsonObject callGoogleAPI(String isbn) {
+        InputStream is = getFromCache(isbn);
+        if(is==null)
+        {
+            String sURL = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
+            System.out.println(sURL);
+            URL url;
+            try {
+                url = new URL(sURL);
+                URLConnection u = url.openConnection();
+                u.setUseCaches(true);
+                u.setConnectTimeout(5000);
+                u.setReadTimeout(5000);
+                HttpURLConnection request = (HttpURLConnection) u;
+                System.out.println("calling google...");
+                request.connect();
+                System.out.println("finished calling google");
+                // Convert to a JSON object to print data
+                is = (InputStream) request.getContent();
+                storeInCache(is,isbn);
+            } catch (Exception ex) {
+                System.out.println("problem calling google");
+                return null;
+            }
+        }
+        try {
             JsonParser jp = new JsonParser(); //from gson
-            JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //convert the input stream to a json element
+            JsonElement root = jp.parse(new InputStreamReader(is)); //convert the input stream to a json element
             JsonObject rootobj = root.getAsJsonObject(); //may be an array, may be an object. 
             System.out.println(rootobj.toString());
             return rootobj;
         } catch (Exception ex) {
             System.out.println("problem calling google");
-            //Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -216,7 +270,7 @@ public class StoreBean implements StoreBeanRemote {
         Book b = em.getReference(Book.class, isbn);
         SimpleBook sb = getSimpleBook(b);
         int left_quantity = quantity + b.getStock(); //update all orders than can be satisfied with new stock
-        List<BookOrder> bos = b.getBookOrderCollection();
+        List<BookOrder> bos = b.getBookOrderCollection(); //TODO
         for (BookOrder bo : bos) {
             if (!bo.getState().startsWith(DISPATCHED_AT) && bo.getQuantity() <= left_quantity) {
                 //order is ready
@@ -241,7 +295,7 @@ public class StoreBean implements StoreBeanRemote {
     public void notifyOrderAboutToShip(String isbn, int quantity) { //notifies the one that can be satisfied only with new stock
         Book b = em.getReference(Book.class, isbn);
         int left_quantity = quantity;
-        List<BookOrder> bos = b.getBookOrderCollection();
+        List<BookOrder> bos = b.getBookOrderCollection(); //TODO
         for (BookOrder bo : bos) {
             if (bo.getState().startsWith(WAITING_EXPEDITION) && bo.getQuantity() <= left_quantity) {
                 Calendar c = Calendar.getInstance();
@@ -351,10 +405,12 @@ public class StoreBean implements StoreBeanRemote {
 
     @Override
     public List<SimpleOrder> getBookOrders(int clientId) {
-        Client c = em.find(Client.class, clientId);
+        Client c = em.getReference(Client.class, clientId);
         List<SimpleOrder> l = new ArrayList();
-        for (BookOrder bo : c.getBookOrderCollection()) {
+        List<BookOrder> l2 = em.createNamedQuery("BookOrder.findByClient", BookOrder.class).setParameter("client", c).getResultList();
+        for (BookOrder bo : l2) {
             l.add(getBookOrder(bo.getId()));
+            System.out.println("--->" + bo.getId());
         }
         return l;
     }
