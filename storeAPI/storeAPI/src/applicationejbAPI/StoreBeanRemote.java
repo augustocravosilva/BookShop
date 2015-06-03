@@ -54,4 +54,6 @@ public interface StoreBeanRemote {
     List<BookSell> getAllSells();
 
     void changeClientPassword(String password, int clientId);
+
+    boolean addBook(String isbn);
 }

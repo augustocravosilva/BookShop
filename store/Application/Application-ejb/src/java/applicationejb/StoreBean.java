@@ -449,4 +449,23 @@ public class StoreBean implements StoreBeanRemote {
                     + "Password: "+password+"\n\n\nCheers");
     }
 
+    @Override
+    public boolean addBook(String isbn) {
+        try{
+            JsonObject o = callGoogleAPI(isbn);
+            if(o.get("totalItems").getAsInt()<=0)
+                return false;
+        }catch(Exception e)
+        {
+            return false;
+        }
+        Book b = new Book(isbn);
+        b.setStock(0);
+        persist(b);
+        em.flush();
+        return true;
+    }
+    
+    
+
 }
