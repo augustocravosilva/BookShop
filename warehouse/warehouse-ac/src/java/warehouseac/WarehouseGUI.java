@@ -143,6 +143,10 @@ public class WarehouseGUI extends javax.swing.JFrame {
             
             for(int i: selected) {
                 IBookOrder o = warehouseService.getOrder(rowToId.get(i));
+                
+                if(o.getStatus().equals(CLOSED))
+                    continue;
+                
                 o.setStatus(CLOSED);
                 o.setDispatchDate(dateString);
                 
