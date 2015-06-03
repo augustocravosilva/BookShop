@@ -17,6 +17,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -139,7 +141,7 @@ public class StoreBean implements StoreBeanRemote {
         return c.getId();
     }
     
-    private InputStream getFromCache(String isbn)
+    private String getFromCache(String isbn)
     {
         final File folder = new File("./");
         File[] fs = folder.listFiles(new FilenameFilter() {
@@ -151,31 +153,34 @@ public class StoreBean implements StoreBeanRemote {
         });
         if(fs != null && fs.length > 0)
             try {
-                return new FileInputStream(fs[0]);
+                return convertStreamToString(new FileInputStream(fs[0]));
         } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
             return null;
         }
         return null;
     }
 
-    private void storeInCache(InputStream i, String isbn){
+    private void storeInCache(String s, String isbn){
+        PrintWriter out;
         try {
-            i.reset();
-        } catch (IOException ex) {
-            Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        final File file = new File(isbn+".json");
-        try {
-            file.createNewFile();
-            Files.copy(i,file.toPath());
-        } catch (Exception ex) {
-            Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
+            out = new PrintWriter(isbn+".json");
+            out.print(s);
+            out.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            //Logger.getLogger(StoreBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    static String convertStreamToString(java.io.InputStream is) {
+    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+    return s.hasNext() ? s.next() : "";
+    }
+    
     private JsonObject callGoogleAPI(String isbn) {
-        InputStream is = getFromCache(isbn);
-        if(is==null)
+        String json_to_parse = getFromCache(isbn);
+        if(json_to_parse==null)
         {
             String sURL = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
             System.out.println(sURL);
@@ -191,16 +196,19 @@ public class StoreBean implements StoreBeanRemote {
                 request.connect();
                 System.out.println("finished calling google");
                 // Convert to a JSON object to print data
-                is = (InputStream) request.getContent();
-                storeInCache(is,isbn);
+                InputStream is = (InputStream) request.getContent();
+                json_to_parse = convertStreamToString(is);
+                storeInCache(json_to_parse,isbn);
             } catch (Exception ex) {
                 System.out.println("problem calling google");
                 return null;
             }
+        }else{
+            System.out.println("reading from cache");
         }
         try {
             JsonParser jp = new JsonParser(); //from gson
-            JsonElement root = jp.parse(new InputStreamReader(is)); //convert the input stream to a json element
+            JsonElement root = jp.parse(json_to_parse); //convert the input stream to a json element
             JsonObject rootobj = root.getAsJsonObject(); //may be an array, may be an object. 
             System.out.println(rootobj.toString());
             return rootobj;
@@ -270,7 +278,7 @@ public class StoreBean implements StoreBeanRemote {
         Book b = em.getReference(Book.class, isbn);
         SimpleBook sb = getSimpleBook(b);
         int left_quantity = quantity + b.getStock(); //update all orders than can be satisfied with new stock
-        List<BookOrder> bos = b.getBookOrderCollection(); //TODO
+        List<BookOrder> bos = em.createNamedQuery("BookOrder.findByBook", BookOrder.class).setParameter("isbn", b).getResultList();
         for (BookOrder bo : bos) {
             if (!bo.getState().startsWith(DISPATCHED_AT) && bo.getQuantity() <= left_quantity) {
                 //order is ready
@@ -295,7 +303,7 @@ public class StoreBean implements StoreBeanRemote {
     public void notifyOrderAboutToShip(String isbn, int quantity) { //notifies the one that can be satisfied only with new stock
         Book b = em.getReference(Book.class, isbn);
         int left_quantity = quantity;
-        List<BookOrder> bos = b.getBookOrderCollection(); //TODO
+        List<BookOrder> bos =em.createNamedQuery("BookOrder.findByBook", BookOrder.class).setParameter("isbn", b).getResultList();
         for (BookOrder bo : bos) {
             if (bo.getState().startsWith(WAITING_EXPEDITION) && bo.getQuantity() <= left_quantity) {
                 Calendar c = Calendar.getInstance();
