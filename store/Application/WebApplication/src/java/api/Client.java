@@ -6,6 +6,7 @@
 package api;
 
 import applicationejbAPI.StoreBeanRemote;
+import com.google.gson.Gson;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.JsonObject;
@@ -22,6 +23,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import simple.SimpleBook;
 import simple.SimpleClient;
 
 /**
@@ -103,7 +105,7 @@ public class Client {
     @Path("login")
     @Produces("application/json")
     @Consumes({"application/json"})
-    public SimpleClient login(JsonObject json) {
+    public String login(JsonObject json) {
         System.out.println("json-> " + json.toString());
 
         if(!json.containsKey("email") || !json.containsKey("password")) {
@@ -118,7 +120,11 @@ public class Client {
         if(res >= 0)
         {
             SimpleClient c = storeBean.getClient(res);
-            return c;
+            
+            Gson g = new Gson();
+            String jsonString = g.toJson(c);
+            jsonString = jsonString.replace("\"address\"", "\"city\"");
+            return jsonString;
         }
         else throw new WebApplicationException("{\"error\": \"wrong credentials\"}", 404);
         
