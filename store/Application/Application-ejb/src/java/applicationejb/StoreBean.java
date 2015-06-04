@@ -180,7 +180,7 @@ public class StoreBean implements StoreBeanRemote {
     
     private JsonObject callGoogleAPI(String isbn) {
         String json_to_parse = getFromCache(isbn);
-        if(json_to_parse==null)
+        if(json_to_parse==null || json_to_parse.equals(""))
         {
             String sURL = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
             System.out.println(sURL);
@@ -200,6 +200,7 @@ public class StoreBean implements StoreBeanRemote {
                 json_to_parse = convertStreamToString(is);
                 storeInCache(json_to_parse,isbn);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 System.out.println("problem calling google");
                 return null;
             }
@@ -207,13 +208,15 @@ public class StoreBean implements StoreBeanRemote {
             System.out.println("reading from cache");
         }
         try {
+            //System.out.println("---> "+json_to_parse);
             JsonParser jp = new JsonParser(); //from gson
             JsonElement root = jp.parse(json_to_parse); //convert the input stream to a json element
             JsonObject rootobj = root.getAsJsonObject(); //may be an array, may be an object. 
             System.out.println(rootobj.toString());
             return rootobj;
         } catch (Exception ex) {
-            System.out.println("problem calling google");
+            ex.printStackTrace();
+            System.out.println("problem parsing google");
         }
         return null;
     }
