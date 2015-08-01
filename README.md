@@ -1,5 +1,6 @@
 Lab Project for Distribution and Integration Technologies - FEUP
 
+Project using JavaEE and Glassfish server
 
 #Setup
 
